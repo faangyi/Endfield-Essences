@@ -1,57 +1,55 @@
 import { describe, expect, it } from 'vitest'
-import { findMatchingLocations } from './recommendation'
-import type { FarmingLocation, Weapon } from '../types'
+import { findMatchingAlluviums } from './recommendation'
+import type { Alluvium, Weapon } from '../types'
 
 const weapon: Weapon = {
-  id: 'test-weapon',
-  name: '测试武器',
+  name: '光荣记忆',
   type: '单手剑',
-  baseAttribute: '敏捷',
-  additionalAttribute: '暴击',
-  skillAttribute: '夜幕',
+  attributeStats: '敏捷提升',
+  secondaryStats: '暴击率提升',
+  skillStats: '夜幕',
 }
 
-const locations: FarmingLocation[] = [
+const alluviums: Alluvium[] = [
   {
-    id: 'both',
-    name: '两种属性都存在',
-    additionalAttributes: ['暴击'],
-    skillAttributes: ['夜幕'],
+    name: '双属性均存在',
+    secondaryStats: ['暴击率提升'],
+    skillStats: ['夜幕'],
   },
   {
-    id: 'additional-only',
     name: '只有附加属性',
-    additionalAttributes: ['暴击'],
-    skillAttributes: ['技能增幅'],
+    secondaryStats: ['暴击率提升'],
+    skillStats: ['附术'],
   },
   {
-    id: 'skill-only',
     name: '只有技能属性',
-    additionalAttributes: ['攻击强化'],
-    skillAttributes: ['夜幕'],
+    secondaryStats: ['攻击提升'],
+    skillStats: ['夜幕'],
   },
 ]
 
-describe('findMatchingLocations', () => {
-  it('only returns a location containing both target attributes', () => {
-    expect(findMatchingLocations(weapon, locations).map((item) => item.id))
-      .toEqual(['both'])
+describe('findMatchingAlluviums', () => {
+  it('only returns an Alluvium containing both target stats', () => {
+    expect(findMatchingAlluviums(weapon, alluviums).map((item) => item.name))
+      .toEqual(['双属性均存在'])
   })
 
-  it('does not combine attributes from two different locations', () => {
-    const splitLocations = locations.filter((item) => item.id !== 'both')
+  it('does not combine attributes from two different Alluviums', () => {
+    const splitAlluviums = alluviums.filter(
+      (item) => item.name !== '双属性均存在',
+    )
 
-    expect(findMatchingLocations(weapon, splitLocations)).toEqual([])
+    expect(findMatchingAlluviums(weapon, splitAlluviums)).toEqual([])
   })
 
-  it('does not use the weapon base attribute for location matching', () => {
-    const changedBaseAttribute = { ...weapon, baseAttribute: '力量' }
+  it('does not use attributeStats when matching', () => {
+    const changedBaseStats = { ...weapon, attributeStats: '力量提升' }
 
-    expect(findMatchingLocations(changedBaseAttribute, locations).map((item) => item.id))
-      .toEqual(['both'])
+    expect(findMatchingAlluviums(changedBaseStats, alluviums).map((item) => item.name))
+      .toEqual(['双属性均存在'])
   })
 
-  it('returns an empty array when no location can produce both attributes', () => {
-    expect(findMatchingLocations(weapon, [])).toEqual([])
+  it('returns an empty array when no Alluvium can produce both stats', () => {
+    expect(findMatchingAlluviums(weapon, [])).toEqual([])
   })
 })
