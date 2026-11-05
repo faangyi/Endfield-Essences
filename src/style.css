@@ -550,7 +550,7 @@ select:focus {
   color: var(--mint);
 }
 
-.location-count {
+.alluvium-count {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -558,19 +558,19 @@ select:focus {
   min-width: 68px;
 }
 
-.location-count strong {
+.alluvium-count strong {
   color: var(--mint);
   font-family: "SFMono-Regular", Consolas, monospace;
   font-size: 23px;
   font-weight: 450;
 }
 
-.location-count span {
+.alluvium-count span {
   color: #83969b;
   font-size: 9px;
 }
 
-.location-results {
+.alluvium-results {
   display: flex;
   align-items: center;
   gap: 16px;
@@ -580,7 +580,7 @@ select:focus {
   background: rgba(5, 12, 17, 0.17);
 }
 
-.location-label {
+.alluvium-label {
   display: flex;
   align-items: center;
   gap: 7px;
@@ -597,13 +597,13 @@ select:focus {
   box-shadow: 0 0 8px rgba(154, 217, 198, 0.6);
 }
 
-.location-chips {
+.alluvium-chips {
   display: flex;
   flex-wrap: wrap;
   gap: 7px;
 }
 
-.location-chip {
+.alluvium-chip {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -614,22 +614,22 @@ select:focus {
   font-size: 9px;
 }
 
-.location-chip b {
+.alluvium-chip b {
   color: #d8e9e2;
   font-weight: 550;
 }
 
-.location-chip span {
+.alluvium-chip span {
   color: #83b8a8;
 }
 
-.no-location {
+.no-alluvium {
   color: #839398;
   font-size: 10px;
   line-height: 1.6;
 }
 
-.no-location span {
+.no-alluvium span {
   margin-right: 9px;
   color: #d3a76e;
 }
@@ -793,11 +793,11 @@ select:focus {
     padding-top: 5px;
   }
 
-  .location-count {
+  .alluvium-count {
     min-width: 48px;
   }
 
-  .location-count strong {
+  .alluvium-count strong {
     font-size: 19px;
   }
 
@@ -818,7 +818,7 @@ select:focus {
     font-size: 9px;
   }
 
-  .location-results {
+  .alluvium-results {
     align-items: flex-start;
     flex-direction: column;
     gap: 9px;
@@ -863,7 +863,7 @@ select:focus {
     align-items: flex-start;
   }
 
-  .location-count {
+  .alluvium-count {
     min-width: 42px;
   }
 }
