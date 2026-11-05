@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { locations } from './data/locations'
+import { alluviums } from './data/alluvium'
 import { weapons } from './data/weapons'
-import { buildWeaponLocationMatches } from './logic/recommendation'
+import { buildWeaponAlluviumMatches } from './logic/recommendation'
 
 const selectedType = ref('全部类型')
 const keyword = ref('')
@@ -12,23 +12,23 @@ const typeOptions = computed(() => [
   ...new Set(weapons.map((weapon) => weapon.type)),
 ])
 
-const weaponMatches = computed(() =>
-  buildWeaponLocationMatches(weapons, locations),
+const weaponAlluviumMatches = computed(() =>
+  buildWeaponAlluviumMatches(weapons, alluviums),
 )
 
 const visibleResults = computed(() => {
   const query = keyword.value.trim().toLocaleLowerCase()
 
-  return weaponMatches.value.filter(({ weapon }) => {
+  return weaponAlluviumMatches.value.filter(({ weapon }) => {
     const matchesType =
       selectedType.value === '全部类型' || weapon.type === selectedType.value
 
     const searchableText = [
       weapon.name,
       weapon.type,
-      weapon.baseAttribute,
-      weapon.additionalAttribute,
-      weapon.skillAttribute,
+      weapon.attributeStats,
+      weapon.secondaryStats,
+      weapon.skillStats,
     ]
       .join(' ')
       .toLocaleLowerCase()
@@ -37,9 +37,9 @@ const visibleResults = computed(() => {
   })
 })
 
-const totalMatches = computed(() =>
+const totalAlluviumMatches = computed(() =>
   visibleResults.value.reduce(
-    (total, result) => total + result.locations.length,
+    (total, result) => total + result.alluviums.length,
     0,
   ),
 )
@@ -60,16 +60,16 @@ function resetFilters() {
           <small>ESSENCE ROUTE GUIDE</small>
         </span>
       </a>
-      <span class="topbar-note">WEAPON MATRIX PLANNER <i></i> DEMO</span>
+      <span class="topbar-note">WEAPON MATRIX PLANNER <i></i> ALLUVIUM</span>
     </header>
 
     <main>
       <section class="hero">
         <div class="hero-copy">
           <p class="eyebrow"><span></span> 武器基质刷取指南</p>
-          <h1>找到适合每把武器的<br /><em>基质刷取地点。</em></h1>
+          <h1>找到适合每把武器的<br /><em>基质刷取区域。</em></h1>
           <p class="hero-description">
-            根据武器的附加属性与技能属性，快速筛选能够同时产出两种目标属性的区域。
+            根据武器的附加属性与技能属性，快速筛选能够同时产出两种目标属性的淤积区。
           </p>
           <a class="hero-link" href="#planner">
             开始查询 <span aria-hidden="true">↓</span>
@@ -88,29 +88,28 @@ function resetFilters() {
         <div class="hero-index">FIELD NOTES <b>01 — 03</b></div>
       </section>
 
-      <section class="notice" aria-label="演示数据说明">
+      <section class="notice" aria-label="数据说明">
         <span class="notice-icon">i</span>
         <p>
-          当前页面使用演示数据验证匹配逻辑，<strong>并非完整或真实的游戏地点资料</strong>。
-          正式数据接入后，这里会显示实际刷取区域。
+          已接入武器与淤积区数据。每条推荐都要求目标附加属性和技能属性同时出现在同一个淤积区。
         </p>
       </section>
 
       <section id="planner" class="planner-section">
         <div class="section-heading">
           <div>
-            <p class="eyebrow">ROUTE FINDER / 01</p>
-            <h2>武器刷取地点</h2>
+            <p class="eyebrow">ALLUVIUM FINDER / 01</p>
+            <h2>武器刷取区域</h2>
             <p class="section-description">
-              选择或搜索武器，查看同时包含目标附加属性与技能属性的地点。
+              选择或搜索武器，查看同时包含目标附加属性与技能属性的淤积区。
             </p>
           </div>
           <div class="result-summary">
             <strong>{{ visibleResults.length.toString().padStart(2, '0') }}</strong>
             <span>把武器</span>
             <b>·</b>
-            <strong>{{ totalMatches.toString().padStart(2, '0') }}</strong>
-            <span>个可用地点</span>
+            <strong>{{ totalAlluviumMatches.toString().padStart(2, '0') }}</strong>
+            <span>条武器-淤积区匹配</span>
           </div>
         </div>
 
@@ -145,7 +144,7 @@ function resetFilters() {
         <div v-if="visibleResults.length" class="weapon-list">
           <article
             v-for="(result, index) in visibleResults"
-            :key="result.weapon.id"
+            :key="result.weapon.name"
             class="weapon-card"
           >
             <div class="weapon-card-main">
@@ -159,45 +158,45 @@ function resetFilters() {
                 <div class="attribute-list">
                   <span class="attribute">
                     <small>基础属性</small>
-                    <b>{{ result.weapon.baseAttribute }}</b>
+                    <b>{{ result.weapon.attributeStats }}</b>
                   </span>
                   <span class="attribute target-attribute">
                     <small>附加属性</small>
-                    <b>{{ result.weapon.additionalAttribute }}</b>
+                    <b>{{ result.weapon.secondaryStats }}</b>
                   </span>
                   <span class="attribute target-attribute">
                     <small>技能属性</small>
-                    <b>{{ result.weapon.skillAttribute }}</b>
+                    <b>{{ result.weapon.skillStats }}</b>
                   </span>
                 </div>
               </div>
-              <div class="location-count">
-                <strong>{{ result.locations.length }}</strong>
-                <span>可刷地点</span>
+              <div class="alluvium-count">
+                <strong>{{ result.alluviums.length }}</strong>
+                <span>可刷淤积区</span>
               </div>
             </div>
 
-            <div class="location-results">
-              <template v-if="result.locations.length">
-                <div class="location-label">
+            <div class="alluvium-results">
+              <template v-if="result.alluviums.length">
+                <div class="alluvium-label">
                   <span class="result-dot"></span>
-                  匹配地点
+                  匹配淤积区
                 </div>
-                <div class="location-chips">
+                <div class="alluvium-chips">
                   <span
-                    v-for="location in result.locations"
-                    :key="location.id"
-                    class="location-chip"
+                    v-for="alluvium in result.alluviums"
+                    :key="alluvium.name"
+                    class="alluvium-chip"
                   >
-                    <b>{{ location.name }}</b>
+                    <b>{{ alluvium.name }}</b>
                     <span>附加 ✓</span>
                     <span>技能 ✓</span>
                   </span>
                 </div>
               </template>
-              <div v-else class="no-location">
+              <div v-else class="no-alluvium">
                 <span>—</span>
-                当前演示地点中，没有同时包含这两种目标属性的区域。
+                当前数据中，没有同时包含这两种目标属性的淤积区。
               </div>
             </div>
           </article>
@@ -218,8 +217,8 @@ function resetFilters() {
         <div>
           <h2>匹配规则</h2>
           <p>
-            一个地点必须同时包含武器指定的附加属性和技能属性，才会被列为可刷取地点。
-            两种属性分别出现在不同地点时，不视为匹配。基础属性不参与地点筛选。
+            一个淤积区必须同时包含武器指定的附加属性和技能属性，才会被列为可刷取区域。
+            两种属性分别出现在不同淤积区时，不视为匹配。基础属性不参与淤积区筛选。
           </p>
         </div>
       </section>
