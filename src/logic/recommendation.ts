@@ -1,45 +1,44 @@
 import type {
-  FarmingLocation,
+  Alluvium,
   Weapon,
-  WeaponLocationMatch,
+  WeaponAlluviumMatch,
 } from '../types'
 
 /**
- * Return only locations that can produce both of the weapon's target
- * attributes at the same time.
+ * Find Alluviums that can produce both target attributes of a weapon.
  *
- * The basic attribute is intentionally ignored: according to the game
- * rules provided for this project, it can appear at every location.
+ * Both conditions must be true in the same Alluvium:
+ * - secondaryStats contains the weapon's secondaryStats
+ * - skillStats contains the weapon's skillStats
  *
- * Important: do not match the two attributes across different locations.
- * Both checks must pass against the same FarmingLocation.
+ * attributeStats is intentionally not checked because it is available
+ * at every Alluvium.
  */
-export function findMatchingLocations(
+export function findMatchingAlluviums(
   weapon: Weapon,
-  locations: FarmingLocation[],
-): FarmingLocation[] {
-  return locations.filter((location) => {
-    const hasAdditionalAttribute =
-      location.additionalAttributes.includes(weapon.additionalAttribute)
+  alluviums: Alluvium[],
+): Alluvium[] {
+  return alluviums.filter((alluvium) => {
+    const hasSecondaryStats =
+      alluvium.secondaryStats.includes(weapon.secondaryStats)
 
-    const hasSkillAttribute =
-      location.skillAttributes.includes(weapon.skillAttribute)
+    const hasSkillStats =
+      alluvium.skillStats.includes(weapon.skillStats)
 
-    return hasAdditionalAttribute && hasSkillAttribute
+    return hasSecondaryStats && hasSkillStats
   })
 }
 
 /**
- * Build the location recommendations for a collection of weapons.
- * Weapons with no valid location are kept in the result so the UI can
- * explain that the current data contains no matching farming location.
+ * Generate matching Alluviums for every weapon.
+ * Weapons without a match remain in the output with an empty alluviums array.
  */
-export function buildWeaponLocationMatches(
+export function buildWeaponAlluviumMatches(
   weapons: Weapon[],
-  locations: FarmingLocation[],
-): WeaponLocationMatch[] {
+  alluviums: Alluvium[],
+): WeaponAlluviumMatch[] {
   return weapons.map((weapon) => ({
     weapon,
-    locations: findMatchingLocations(weapon, locations),
+    alluviums: findMatchingAlluviums(weapon, alluviums),
   }))
 }
