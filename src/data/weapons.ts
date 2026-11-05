@@ -1,9 +1,7 @@
 import type { Weapon } from '../types'
 
-/**
- * DEMO DATA ONLY.
- * Replace these rows with the verified weapon table when it is provided.
- */
+import type { Weapon } from '../types'
+
 export const weapons: Weapon[] = [
   {
     "name": "光荣记忆",
