@@ -263,16 +263,21 @@ function toggleBaseStat(attribute: string) {
                 </select>
               </label>
               <label class="filter-field">
-                <span>目标武器</span>
-                <select v-model="targetWeaponName">
+                <span>搜索 / 选择目标武器</span>
+                <input
+                  v-model="targetWeaponName"
+                  type="search"
+                  list="target-weapon-options"
+                  placeholder="输入武器名称"
+                  aria-label="搜索目标武器"
+                />
+                <datalist id="target-weapon-options">
                   <option
                     v-for="weapon in targetWeaponOptions"
                     :key="weapon.name"
                     :value="weapon.name"
-                  >
-                    {{ weapon.name }}
-                  </option>
-                </select>
+                  />
+                </datalist>
               </label>
             </div>
             <div class="target-weapon-summary">
