@@ -1,8 +1,13 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { alluviums } from './data/alluvium'
 import { weapons } from './data/weapons'
-import { buildWeaponAlluviumMatches } from './logic/recommendation'
+import {
+  buildWeaponAlluviumMatches,
+  findJointFarmingWeapons,
+  optimizeBaseAttributeSelection,
+} from './logic/recommendation'
+import type { FixedAttributeType } from './types'
 
 const selectedType = ref('全部类型')
 const keyword = ref('')
@@ -48,6 +53,135 @@ function resetFilters() {
   selectedType.value = '全部类型'
   keyword.value = ''
 }
+
+// Joint farming planner
+const targetType = ref('全部类型')
+const targetWeaponName = ref('光荣记忆')
+const selectedAlluviumName = ref('')
+const fixedAttributeType = ref<FixedAttributeType>('secondaryStats')
+const baseSelectionMode = ref<'auto' | 'manual'>('auto')
+const manualBaseStats = ref<string[]>([])
+
+const baseAttributeOptions = computed(() => [
+  ...new Set(weapons.map((weapon) => weapon.attributeStats)),
+])
+
+const targetTypeOptions = computed(() => [
+  '全部类型',
+  ...new Set(weapons.map((weapon) => weapon.type)),
+])
+
+const targetWeaponOptions = computed(() =>
+  weapons.filter((weapon) =>
+    targetType.value === '全部类型' || weapon.type === targetType.value,
+  ),
+)
+
+const targetWeapon = computed(() =>
+  weapons.find((weapon) => weapon.name === targetWeaponName.value)
+  ?? targetWeaponOptions.value[0]
+  ?? weapons[0],
+)
+
+watch(targetType, () => {
+  if (!targetWeaponOptions.value.some((weapon) => weapon.name === targetWeaponName.value)) {
+    targetWeaponName.value = targetWeaponOptions.value[0]?.name ?? ''
+  }
+})
+
+const availableTargetAlluviums = computed(() =>
+  targetWeapon.value
+    ? weaponAlluviumMatches.value.find(
+        (result) => result.weapon.name === targetWeapon.value.name,
+      )?.alluviums ?? []
+    : [],
+)
+
+watch(
+  [targetWeaponName, availableTargetAlluviums],
+  () => {
+    if (!availableTargetAlluviums.value.some(
+      (alluvium) => alluvium.name === selectedAlluviumName.value,
+    )) {
+      selectedAlluviumName.value = availableTargetAlluviums.value[0]?.name ?? ''
+    }
+  },
+  { immediate: true },
+)
+
+const selectedAlluvium = computed(() =>
+  availableTargetAlluviums.value.find(
+    (alluvium) => alluvium.name === selectedAlluviumName.value,
+  ),
+)
+
+const optimization = computed(() => {
+  if (!selectedAlluvium.value || !targetWeapon.value) return null
+
+  return optimizeBaseAttributeSelection(
+    targetWeapon.value,
+    selectedAlluvium.value,
+    fixedAttributeType.value,
+    weapons,
+  )
+})
+
+const selectedBaseStats = computed(() => {
+  if (baseSelectionMode.value === 'auto') {
+    return optimization.value?.recommendedBaseStats ?? []
+  }
+
+  return manualBaseStats.value
+})
+
+const jointFarmingWeapons = computed(() => {
+  if (!selectedAlluvium.value || !targetWeapon.value) return []
+
+  return findJointFarmingWeapons(
+    targetWeapon.value,
+    selectedAlluvium.value,
+    fixedAttributeType.value,
+    selectedBaseStats.value,
+    weapons,
+  )
+})
+
+const selectedBaseStatsValid = computed(() =>
+  selectedBaseStats.value.length === 3
+  && selectedBaseStats.value.includes(targetWeapon.value.attributeStats),
+)
+
+function useAutomaticBaseStats() {
+  baseSelectionMode.value = 'auto'
+}
+
+function useManualBaseStats() {
+  if (baseSelectionMode.value === 'auto') {
+    manualBaseStats.value = [...(optimization.value?.recommendedBaseStats ?? [])]
+  }
+  baseSelectionMode.value = 'manual'
+}
+
+function toggleBaseStat(attribute: string) {
+  if (attribute === targetWeapon.value.attributeStats) return
+
+  const current = [...manualBaseStats.value]
+  const index = current.indexOf(attribute)
+
+  if (index >= 0) {
+    current.splice(index, 1)
+  } else {
+    if (current.length >= 3) {
+      const removableIndex = current.findIndex(
+        (item) => item !== targetWeapon.value.attributeStats,
+      )
+      if (removableIndex >= 0) current.splice(removableIndex, 1)
+    }
+    current.push(attribute)
+  }
+
+  manualBaseStats.value = current
+}
 </script>
 
 <template>
@@ -69,10 +203,10 @@ function resetFilters() {
           <p class="eyebrow"><span></span> 武器基质刷取指南</p>
           <h1>找到适合每把武器的<br /><em>基质刷取区域。</em></h1>
           <p class="hero-description">
-            根据武器的附加属性与技能属性，快速筛选能够同时产出两种目标属性的淤积区。
+            根据武器属性与淤积区掉落池，规划刻写券固定属性，寻找能够一起刷取的武器。
           </p>
           <a class="hero-link" href="#planner">
-            开始查询 <span aria-hidden="true">↓</span>
+            开始规划 <span aria-hidden="true">↓</span>
           </a>
         </div>
 
@@ -91,17 +225,250 @@ function resetFilters() {
       <section class="notice" aria-label="数据说明">
         <span class="notice-icon">i</span>
         <p>
-          已接入武器与淤积区数据。每条推荐都要求目标附加属性和技能属性同时出现在同一个淤积区。
+          联合刷取会同时检查固定属性、淤积区随机属性池和刻写券选择的三种基础属性。目标武器的基础属性始终保留。
         </p>
       </section>
 
-      <section id="planner" class="planner-section">
+      <section id="planner" class="joint-planner">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">JOINT FARMING / 02</p>
+            <h2>联合刷取规划</h2>
+            <p class="section-description">
+              选择目标武器、淤积区与刻写券固定属性，自动寻找可以一起刷取的武器。
+            </p>
+          </div>
+          <div class="planner-total">
+            <strong>{{ jointFarmingWeapons.length }}</strong>
+            <span>把可联合刷取</span>
+          </div>
+        </div>
+
+        <div class="planner-panel">
+          <div class="planner-step">
+            <div class="step-heading">
+              <span class="step-number">01</span>
+              <div>
+                <h3>选择目标武器</h3>
+                <p>先选择你最想获得基质的武器。</p>
+              </div>
+            </div>
+            <div class="planner-fields">
+              <label class="filter-field">
+                <span>武器类型</span>
+                <select v-model="targetType">
+                  <option v-for="type in targetTypeOptions" :key="type" :value="type">
+                    {{ type }}
+                  </option>
+                </select>
+              </label>
+              <label class="filter-field">
+                <span>目标武器</span>
+                <select v-model="targetWeaponName">
+                  <option
+                    v-for="weapon in targetWeaponOptions"
+                    :key="weapon.name"
+                    :value="weapon.name"
+                  >
+                    {{ weapon.name }}
+                  </option>
+                </select>
+              </label>
+            </div>
+            <div class="target-weapon-summary">
+              <div class="target-weapon-title">
+                <strong>{{ targetWeapon.name }}</strong>
+                <span class="weapon-type">{{ targetWeapon.type }}</span>
+              </div>
+              <div class="attribute-list">
+                <span class="attribute">
+                  <small>基础属性</small>
+                  <b>{{ targetWeapon.attributeStats }}</b>
+                </span>
+                <span class="attribute target-attribute">
+                  <small>附加属性</small>
+                  <b>{{ targetWeapon.secondaryStats }}</b>
+                </span>
+                <span class="attribute target-attribute">
+                  <small>技能属性</small>
+                  <b>{{ targetWeapon.skillStats }}</b>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="planner-step">
+            <div class="step-heading">
+              <span class="step-number">02</span>
+              <div>
+                <h3>选择淤积区</h3>
+                <p>仅显示能够同时产出目标武器两种非基础属性的区域。</p>
+              </div>
+            </div>
+            <div v-if="availableTargetAlluviums.length" class="choice-chips">
+              <button
+                v-for="alluvium in availableTargetAlluviums"
+                :key="alluvium.name"
+                type="button"
+                class="choice-chip"
+                :class="{ active: selectedAlluviumName === alluvium.name }"
+                @click="selectedAlluviumName = alluvium.name"
+              >
+                {{ alluvium.name }}
+              </button>
+            </div>
+            <p v-else class="planner-empty">当前武器没有可用的淤积区数据。</p>
+          </div>
+
+          <div class="planner-step">
+            <div class="step-heading">
+              <span class="step-number">03</span>
+              <div>
+                <h3>选择刻写券固定属性</h3>
+                <p>固定目标武器的一种非基础属性，另一种从当前淤积区的属性池随机产生。</p>
+              </div>
+            </div>
+            <div class="fixed-stat-options">
+              <button
+                type="button"
+                class="fixed-stat-option"
+                :class="{ active: fixedAttributeType === 'secondaryStats' }"
+                @click="fixedAttributeType = 'secondaryStats'"
+              >
+                <span>固定附加属性</span>
+                <strong>{{ targetWeapon.secondaryStats }}</strong>
+              </button>
+              <button
+                type="button"
+                class="fixed-stat-option"
+                :class="{ active: fixedAttributeType === 'skillStats' }"
+                @click="fixedAttributeType = 'skillStats'"
+              >
+                <span>固定技能属性</span>
+                <strong>{{ targetWeapon.skillStats }}</strong>
+              </button>
+            </div>
+          </div>
+
+          <div class="planner-step">
+            <div class="step-heading">
+              <span class="step-number">04</span>
+              <div>
+                <h3>选择三种基础属性</h3>
+                <p>目标武器的基础属性必须包含在内，另外两种由系统优化或手动选择。</p>
+              </div>
+            </div>
+
+            <div class="base-mode-switch">
+              <button
+                type="button"
+                :class="{ active: baseSelectionMode === 'auto' }"
+                @click="useAutomaticBaseStats"
+              >
+                自动选择最优组合
+              </button>
+              <button
+                type="button"
+                :class="{ active: baseSelectionMode === 'manual' }"
+                @click="useManualBaseStats"
+              >
+                手动调整
+              </button>
+            </div>
+
+            <div v-if="baseSelectionMode === 'auto' && optimization" class="optimization-note">
+              <span class="result-dot"></span>
+              自动计算了 {{ optimization.optimalCombinationCount }} 种并列最优组合，
+              当前默认组合可覆盖 <strong>{{ optimization.maxMatches }}</strong> 把武器。
+            </div>
+            <div v-else class="optimization-note">
+              手动选择三种基础属性。目标武器的基础属性已锁定，不能取消。
+            </div>
+
+            <div class="base-stat-options">
+              <button
+                v-for="attribute in baseAttributeOptions"
+                :key="attribute"
+                type="button"
+                class="base-stat-option"
+                :class="{
+                  active: selectedBaseStats.includes(attribute),
+                  locked: attribute === targetWeapon.attributeStats,
+                }"
+                :disabled="attribute === targetWeapon.attributeStats"
+                @click="toggleBaseStat(attribute)"
+              >
+                <span class="base-stat-check">{{ selectedBaseStats.includes(attribute) ? '✓' : '+' }}</span>
+                {{ attribute }}
+                <small v-if="attribute === targetWeapon.attributeStats">目标锁定</small>
+              </button>
+            </div>
+            <p class="base-selection-count">
+              已选择 {{ selectedBaseStats.length }} / 3 种基础属性
+              <span v-if="baseSelectionMode === 'manual'"> · 修改后结果会立即更新</span>
+            </p>
+          </div>
+        </div>
+
+        <div class="joint-results">
+          <div class="joint-results-heading">
+            <div>
+              <p class="eyebrow">MATCHED WEAPONS / RESULT</p>
+              <h3>联合刷取结果</h3>
+            </div>
+            <span class="joint-result-count">{{ jointFarmingWeapons.length }} 把武器</span>
+          </div>
+
+          <div v-if="selectedAlluvium && selectedBaseStatsValid && jointFarmingWeapons.length" class="joint-weapon-list">
+            <article
+              v-for="(weapon, index) in jointFarmingWeapons"
+              :key="weapon.name"
+              class="joint-weapon-card"
+            >
+              <span class="weapon-index">{{ (index + 1).toString().padStart(2, '0') }}</span>
+              <div class="joint-weapon-info">
+                <div class="weapon-title-line">
+                  <h4>{{ weapon.name }}</h4>
+                  <span class="weapon-type">{{ weapon.type }}</span>
+                  <span v-if="weapon.name === targetWeapon.name" class="target-tag">目标武器</span>
+                </div>
+                <div class="attribute-list">
+                  <span class="attribute" :class="{ 'target-attribute': weapon.attributeStats === targetWeapon.attributeStats }">
+                    <small>基础</small><b>{{ weapon.attributeStats }}</b>
+                  </span>
+                  <span class="attribute" :class="{ 'target-attribute': weapon.secondaryStats === targetWeapon.secondaryStats }">
+                    <small>附加</small><b>{{ weapon.secondaryStats }}</b>
+                  </span>
+                  <span class="attribute" :class="{ 'target-attribute': weapon.skillStats === targetWeapon.skillStats }">
+                    <small>技能</small><b>{{ weapon.skillStats }}</b>
+                  </span>
+                </div>
+              </div>
+            </article>
+          </div>
+          <div v-else class="planner-empty result-empty">
+            <span>⌕</span>
+            <strong>{{ selectedBaseStatsValid ? '当前组合没有其他可联合刷取的武器' : '请完整选择三种基础属性' }}</strong>
+            <p>可以尝试切换固定属性或手动调整基础属性组合。</p>
+          </div>
+          <p v-if="selectedAlluvium" class="result-footnote">
+            刷取地点：{{ selectedAlluvium.name }} ·
+            固定{{ fixedAttributeType === 'secondaryStats' ? '附加属性' : '技能属性' }}：{{
+              fixedAttributeType === 'secondaryStats'
+                ? targetWeapon.secondaryStats
+                : targetWeapon.skillStats
+            }}
+          </p>
+        </div>
+      </section>
+
+      <section id="weapon-catalog" class="planner-section">
         <div class="section-heading">
           <div>
             <p class="eyebrow">ALLUVIUM FINDER / 01</p>
-            <h2>武器刷取区域</h2>
+            <h2>武器刷取区域一览</h2>
             <p class="section-description">
-              选择或搜索武器，查看同时包含目标附加属性与技能属性的淤积区。
+              查看每把武器能够同时产出目标附加属性与技能属性的所有淤积区。
             </p>
           </div>
           <div class="result-summary">
@@ -154,7 +521,6 @@ function resetFilters() {
                   <h3>{{ result.weapon.name }}</h3>
                   <span class="weapon-type">{{ result.weapon.type }}</span>
                 </div>
-
                 <div class="attribute-list">
                   <span class="attribute">
                     <small>基础属性</small>
@@ -213,12 +579,12 @@ function resetFilters() {
       </section>
 
       <section class="rule-note">
-        <div class="rule-number">RULE / 01</div>
+        <div class="rule-number">RULE / 02</div>
         <div>
-          <h2>匹配规则</h2>
+          <h2>联合刷取规则</h2>
           <p>
-            一个淤积区必须同时包含武器指定的附加属性和技能属性，才会被列为可刷取区域。
-            两种属性分别出现在不同淤积区时，不视为匹配。基础属性不参与淤积区筛选。
+            使用刻写券时，固定属性必须与目标武器对应属性一致；另一种非基础属性从当前淤积区的八种属性中随机出现。
+            三种基础属性必须包含目标武器的基础属性。自动模式会枚举所有可行组合，选择能覆盖最多武器的方案。
           </p>
         </div>
       </section>
@@ -233,7 +599,7 @@ function resetFilters() {
         </span>
       </a>
       <span>非官方玩家工具 · 数据以游戏实际内容为准</span>
-      <span class="footer-code">BUILD 0.1.0</span>
+      <span class="footer-code">BUILD 0.2.0</span>
     </footer>
   </div>
 </template>
