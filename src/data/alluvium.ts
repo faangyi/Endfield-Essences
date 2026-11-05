@@ -1,12 +1,6 @@
-import type { FarmingLocation } from '../types'
+import type { Alluvium } from '../types'
 
-/**
- * DEMO DATA ONLY.
- * Attribute names other than those in the example weapon are placeholders.
- * Each real location should contain its actual eight additional attributes
- * and eight skill attributes.
- */
-export const locations: FarmingLocation[] = [
+export const alluviums: Alluvium[] = [
   {
     name: '枢纽区',
     secondaryStats: [
