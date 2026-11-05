@@ -1,7 +1,5 @@
 import type { Weapon } from '../types'
 
-import type { Weapon } from '../types'
-
 export const weapons: Weapon[] = [
   {
     "name": "光荣记忆",
