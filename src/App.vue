@@ -89,6 +89,23 @@ watch(targetType, () => {
   }
 })
 
+watch(targetWeapon, (weapon) => {
+  if (baseSelectionMode.value !== 'manual') return
+
+  const retainedStats = manualBaseStats.value
+    .filter((attribute) => attribute !== weapon.attributeStats)
+    .slice(0, 2)
+
+  manualBaseStats.value = [weapon.attributeStats, ...retainedStats]
+
+  for (const attribute of baseAttributeOptions.value) {
+    if (manualBaseStats.value.length === 3) break
+    if (!manualBaseStats.value.includes(attribute)) {
+      manualBaseStats.value.push(attribute)
+    }
+  }
+})
+
 const availableTargetAlluviums = computed(() =>
   targetWeapon.value
     ? weaponAlluviumMatches.value.find(
