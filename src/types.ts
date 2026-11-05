@@ -1,31 +1,29 @@
 /**
- * Weapon data used by the matching algorithm.
- *
- * baseAttribute is displayed as weapon information, but it does not
- * participate in location matching: every location can produce it.
+ * Weapon fields use the in-game data names:
+ * attributeStats = 基础属性
+ * secondaryStats = 附加属性
+ * skillStats = 技能属性
  */
 export interface Weapon {
-  id: string
   name: string
   type: string
-  baseAttribute: string
-  additionalAttribute: string
-  skillAttribute: string
+  attributeStats: string
+  secondaryStats: string
+  skillStats: string
 }
 
 /**
- * One farming location and the two attribute pools available there.
- * A location matches a weapon only when BOTH weapon attributes are present
- * in this same location.
+ * One Alluvium and the two attribute pools available there.
+ * Weapon attributeStats is omitted from matching because it can appear
+ * at every Alluvium.
  */
-export interface FarmingLocation {
-  id: string
+export interface Alluvium {
   name: string
-  additionalAttributes: string[]
-  skillAttributes: string[]
+  secondaryStats: string[]
+  skillStats: string[]
 }
 
-export interface WeaponLocationMatch {
+export interface WeaponAlluviumMatch {
   weapon: Weapon
-  locations: FarmingLocation[]
+  alluviums: Alluvium[]
 }
