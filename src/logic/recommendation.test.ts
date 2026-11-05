@@ -142,14 +142,14 @@ describe('optimizeBaseAttributeSelection', () => {
     const optimizationWeapons: Weapon[] = [
       targetWeapon,
       ...Array.from({ length: 3 }, (_, index) => ({
-        name: \`力量武器\${index + 1}\`,
+        name: '力量武器' + (index + 1),
         type: '单手剑',
         attributeStats: '力量提升',
         secondaryStats: '暴击率提升',
         skillStats: '夜幕',
       })),
       ...Array.from({ length: 2 }, (_, index) => ({
-        name: \`意志武器\${index + 1}\`,
+        name: '意志武器' + (index + 1),
         type: '单手剑',
         attributeStats: '意志提升',
         secondaryStats: '暴击率提升',
