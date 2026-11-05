@@ -867,3 +867,385 @@ select:focus {
     min-width: 42px;
   }
 }
+
+
+/* Joint farming planner */
+.joint-planner {
+  padding: 34px 0 66px;
+  border-bottom: 1px solid var(--line);
+}
+
+.planner-total {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+  color: var(--muted);
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.planner-total strong {
+  color: var(--mint);
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 28px;
+  font-weight: 450;
+}
+
+.planner-panel {
+  border: 1px solid var(--line);
+  background: rgba(23, 35, 44, 0.68);
+}
+
+.planner-step {
+  padding: 24px 25px;
+  border-bottom: 1px solid var(--line);
+}
+
+.planner-step:last-child {
+  border-bottom: 0;
+}
+
+.step-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  margin-bottom: 17px;
+}
+
+.step-number {
+  display: grid;
+  flex: 0 0 27px;
+  width: 27px;
+  height: 27px;
+  place-items: center;
+  border: 1px solid rgba(154, 217, 198, 0.4);
+  color: var(--mint);
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 10px;
+}
+
+.step-heading h3 {
+  margin: 1px 0 5px;
+  color: #e8efec;
+  font-size: 14px;
+  font-weight: 550;
+}
+
+.step-heading p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.7;
+}
+
+.planner-fields {
+  display: grid;
+  grid-template-columns: minmax(150px, 0.7fr) minmax(220px, 1.3fr);
+  gap: 13px;
+}
+
+.target-weapon-summary {
+  margin-top: 14px;
+  padding: 15px;
+  border: 1px solid rgba(154, 217, 198, 0.16);
+  background: rgba(154, 217, 198, 0.035);
+}
+
+.target-weapon-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.target-weapon-title > strong {
+  color: #f0f4f2;
+  font-size: 15px;
+  font-weight: 550;
+}
+
+.choice-chips,
+.fixed-stat-options,
+.base-stat-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+
+.choice-chip,
+.base-stat-option,
+.fixed-stat-option,
+.base-mode-switch button {
+  border: 1px solid rgba(206, 225, 230, 0.15);
+  border-radius: 2px;
+  background: #111d25;
+  color: #a9b8b9;
+  transition: border-color 150ms ease, background 150ms ease, color 150ms ease;
+}
+
+.choice-chip {
+  min-height: 38px;
+  padding: 0 15px;
+  font-size: 11px;
+}
+
+.choice-chip:hover,
+.base-stat-option:hover:not(:disabled),
+.fixed-stat-option:hover {
+  border-color: rgba(154, 217, 198, 0.55);
+  color: var(--mint);
+}
+
+.choice-chip.active,
+.fixed-stat-option.active,
+.base-stat-option.active {
+  border-color: rgba(154, 217, 198, 0.72);
+  background: rgba(71, 137, 119, 0.17);
+  color: var(--mint);
+}
+
+.fixed-stat-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.fixed-stat-option {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 9px;
+  min-height: 76px;
+  padding: 14px;
+  text-align: left;
+}
+
+.fixed-stat-option span {
+  color: #8fa2a5;
+  font-size: 10px;
+}
+
+.fixed-stat-option strong {
+  color: #e0eae5;
+  font-size: 13px;
+  font-weight: 550;
+}
+
+.fixed-stat-option.active strong {
+  color: var(--mint);
+}
+
+.base-mode-switch {
+  display: inline-flex;
+  gap: 4px;
+  margin-bottom: 13px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  background: #101a22;
+}
+
+.base-mode-switch button {
+  min-height: 33px;
+  padding: 0 13px;
+  border-color: transparent;
+  background: transparent;
+  font-size: 10px;
+}
+
+.base-mode-switch button.active {
+  border-color: rgba(154, 217, 198, 0.3);
+  background: rgba(154, 217, 198, 0.1);
+  color: var(--mint);
+}
+
+.optimization-note {
+  margin-bottom: 13px;
+  color: #9eafb0;
+  font-size: 10px;
+  line-height: 1.7;
+}
+
+.optimization-note strong {
+  color: var(--mint);
+  font-size: 13px;
+}
+
+.base-stat-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 39px;
+  padding: 0 11px;
+  font-size: 10px;
+}
+
+.base-stat-option.locked {
+  border-color: rgba(154, 217, 198, 0.55);
+  background: rgba(71, 137, 119, 0.17);
+  color: var(--mint);
+  cursor: not-allowed;
+}
+
+.base-stat-check {
+  display: grid;
+  width: 16px;
+  height: 16px;
+  place-items: center;
+  border: 1px solid rgba(206, 225, 230, 0.28);
+  color: #82969a;
+  font-size: 10px;
+}
+
+.base-stat-option.active .base-stat-check {
+  border-color: rgba(154, 217, 198, 0.7);
+  color: var(--mint);
+}
+
+.base-stat-option small {
+  color: #85b9a9;
+  font-size: 8px;
+}
+
+.base-selection-count {
+  margin: 11px 0 0;
+  color: #83969a;
+  font-size: 9px;
+}
+
+.planner-empty {
+  margin: 0;
+  color: #a2aeb0;
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+.joint-results {
+  margin-top: 17px;
+  border: 1px solid var(--line);
+  background: rgba(23, 35, 44, 0.5);
+}
+
+.joint-results-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 19px 22px;
+  border-bottom: 1px solid var(--line);
+}
+
+.joint-results-heading .eyebrow {
+  margin: 0 0 7px;
+  color: #82979c;
+  font-size: 8px;
+}
+
+.joint-results-heading h3 {
+  margin: 0;
+  color: #e8efec;
+  font-size: 16px;
+  font-weight: 550;
+}
+
+.joint-result-count {
+  color: var(--mint);
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.joint-weapon-list {
+  display: grid;
+}
+
+.joint-weapon-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  padding: 17px 22px;
+  border-bottom: 1px solid rgba(206, 225, 230, 0.07);
+}
+
+.joint-weapon-card:last-child {
+  border-bottom: 0;
+}
+
+.joint-weapon-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.joint-weapon-info h4 {
+  margin: 0;
+  color: #eaf0ed;
+  font-size: 14px;
+  font-weight: 550;
+}
+
+.target-tag {
+  padding: 3px 6px;
+  border: 1px solid rgba(230, 189, 117, 0.35);
+  color: var(--amber);
+  font-size: 8px;
+}
+
+.joint-weapon-info .attribute-list {
+  margin-top: 10px;
+}
+
+.result-empty {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  padding: 35px 18px;
+  text-align: center;
+}
+
+.result-empty > span {
+  color: #718b8d;
+  font-size: 25px;
+}
+
+.result-empty strong {
+  color: #d5e0dd;
+  font-size: 12px;
+  font-weight: 550;
+}
+
+.result-empty p {
+  margin: 0;
+  color: #839398;
+  font-size: 10px;
+}
+
+.result-footnote {
+  margin: 0;
+  padding: 12px 22px;
+  border-top: 1px solid rgba(206, 225, 230, 0.08);
+  color: #819498;
+  font-size: 9px;
+}
+
+@media (max-width: 760px) {
+  .joint-planner {
+    padding: 25px 0 48px;
+  }
+
+  .planner-step {
+    padding: 19px 15px;
+  }
+
+  .planner-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .fixed-stat-options {
+    grid-template-columns: 1fr;
+  }
+
+  .joint-results-heading,
+  .joint-weapon-card {
+    padding-right: 14px;
+    padding-left: 14px;
+  }
+}
