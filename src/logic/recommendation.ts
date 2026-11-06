@@ -1,5 +1,6 @@
 import type {
   Alluvium,
+  AlluviumJointMatch,
   BaseAttributeOptimization,
   FixedAttributeType,
   Weapon,
@@ -7,42 +8,25 @@ import type {
 } from '../types'
 
 /**
- * Find Alluviums that can produce both target attributes of a weapon.
- *
- * Both conditions must be true in the same Alluvium:
- * - secondaryStats contains the weapon's secondaryStats
- * - skillStats contains the weapon's skillStats
- *
- * attributeStats is intentionally not checked because it is available
- * at every Alluvium.
+ * 找出能够同时产出目标武器附加属性与技能属性的淤积区。
+ * 基础属性不参与此判断，因为它在所有淤积区均可能出现。
  */
 export function findMatchingAlluviums(
   weapon: Weapon,
   alluviums: Alluvium[],
 ): Alluvium[] {
-  return alluviums.filter((alluvium) => {
-    const hasSecondaryStats =
-      alluvium.secondaryStats.includes(weapon.secondaryStats)
-
-    const hasSkillStats =
-      alluvium.skillStats.includes(weapon.skillStats)
-
-    return hasSecondaryStats && hasSkillStats
-  })
+  return alluviums.filter((alluvium) =>
+    alluvium.secondaryStats.includes(weapon.secondaryStats)
+    && alluvium.skillStats.includes(weapon.skillStats),
+  )
 }
 
 /**
- * Find all weapons that can be produced alongside the target weapon by
- * fixing one of its two non-base attributes in the selected Alluvium.
+ * 在一个指定淤积区中，寻找能够与目标武器一起刷取的武器。
  *
- * Rules:
- * - The target weapon's two non-base attributes must both exist in the
- *   selected Alluvium.
- * - The candidate must share the fixed attribute with the target.
- * - The candidate's other non-base attribute must be in this Alluvium's
- *   corresponding random attribute pool.
- * - Exactly three base attributes must be selected, including the target's
- *   own base attribute.
+ * 固定附加属性时：候选武器附加属性相同，技能属性存在于该区技能池。
+ * 固定技能属性时：候选武器技能属性相同，附加属性存在于该区附加属性池。
+ * 基础属性必须属于刻写券选定的三种属性，且必须恰好选择三种。
  */
 export function findJointFarmingWeapons(
   target: Weapon,
@@ -61,7 +45,7 @@ export function findJointFarmingWeapons(
     return []
   }
 
-  // The selected Alluvium must be able to produce the target weapon itself.
+  // 所选淤积区必须能够产出目标武器本身。
   if (
     !alluvium.secondaryStats.includes(target.secondaryStats)
     || !alluvium.skillStats.includes(target.skillStats)
@@ -69,49 +53,74 @@ export function findJointFarmingWeapons(
     return []
   }
 
-  const fixedPool =
-    fixedAttributeType === 'secondaryStats'
-      ? alluvium.secondaryStats
-      : alluvium.skillStats
+  const fixedPool = fixedAttributeType === 'secondaryStats'
+    ? alluvium.secondaryStats
+    : alluvium.skillStats
 
-  const randomPool =
-    fixedAttributeType === 'secondaryStats'
-      ? alluvium.skillStats
-      : alluvium.secondaryStats
+  const randomPool = fixedAttributeType === 'secondaryStats'
+    ? alluvium.skillStats
+    : alluvium.secondaryStats
 
   const fixedValue = target[fixedAttributeType]
 
-  if (!fixedPool.includes(fixedValue)) {
-    return []
-  }
+  if (!fixedPool.includes(fixedValue)) return []
 
   return weapons.filter((candidate) => {
-    const candidateRandomValue =
-      fixedAttributeType === 'secondaryStats'
-        ? candidate.skillStats
-        : candidate.secondaryStats
+    const randomValue = fixedAttributeType === 'secondaryStats'
+      ? candidate.skillStats
+      : candidate.secondaryStats
 
     return (
       candidate[fixedAttributeType] === fixedValue
-      && randomPool.includes(candidateRandomValue)
+      && randomPool.includes(randomValue)
       && selectedBaseStatSet.has(candidate.attributeStats)
     )
   })
 }
 
 /**
- * Search every possible three-base-attribute selection that includes the
- * target weapon's base attribute. Return the selection that produces the
- * largest number of jointly farmable weapons.
+ * 不再要求用户预先指定淤积区。
+ * 对全部淤积区分别计算联合刷取武器，并按武器数量从多到少排序。
+ * 不符合目标武器基础属性组合的淤积区不会出现在结果中。
+ */
+export function findJointFarmingAlluviums(
+  target: Weapon,
+  fixedAttributeType: FixedAttributeType,
+  selectedBaseStats: string[],
+  weapons: Weapon[],
+  alluviums: Alluvium[],
+): AlluviumJointMatch[] {
+  return alluviums
+    .map((alluvium) => ({
+      alluvium,
+      weapons: findJointFarmingWeapons(
+        target,
+        alluvium,
+        fixedAttributeType,
+        selectedBaseStats,
+        weapons,
+      ),
+    }))
+    .filter((match) => match.weapons.length > 0)
+    .sort((a, b) => b.weapons.length - a.weapons.length)
+}
+
+/**
+ * 自动优化三种基础属性。
  *
- * If several selections have the same result, the first one in the stable
- * order of base attributes found in the weapons data is chosen by default.
+ * 目标武器的基础属性固定占一个名额，其余两个名额从其他基础属性中
+ * 枚举选择。优化目标按顺序为：
+ * 1. 最大化单个淤积区能够同时刷取的武器数量；
+ * 2. 若并列，最大化所有淤积区的武器-地点匹配总数；
+ * 3. 若仍并列，最大化有可用结果的淤积区数量。
+ *
+ * 所有指标仍然只对可同时刷取的武器进行计数，且目标武器包含在结果中。
  */
 export function optimizeBaseAttributeSelection(
   target: Weapon,
-  alluvium: Alluvium,
   fixedAttributeType: FixedAttributeType,
   weapons: Weapon[],
+  alluviums: Alluvium[],
 ): BaseAttributeOptimization {
   const allBaseStats = [...new Set(weapons.map((weapon) => weapon.attributeStats))]
   const optionalBaseStats = allBaseStats.filter(
@@ -119,21 +128,22 @@ export function optimizeBaseAttributeSelection(
   )
 
   let recommendedBaseStats: string[] = []
-  let matchingWeapons: Weapon[] = []
-  let maxMatches = -1
+  let alluviumMatches: AlluviumJointMatch[] = []
+  let bestSingleAlluviumCount = -1
+  let totalAlluviumWeaponMatches = -1
+  let bestAlluviumCount = -1
   let optimalCombinationCount = 0
 
   if (!allBaseStats.includes(target.attributeStats) || optionalBaseStats.length < 2) {
     return {
       recommendedBaseStats,
-      matchingWeapons,
-      maxMatches: 0,
+      alluviumMatches,
+      bestSingleAlluviumCount: 0,
+      totalAlluviumWeaponMatches: 0,
       optimalCombinationCount: 0,
     }
   }
 
-  // The target's base attribute is mandatory, so only two of the remaining
-  // base attributes need to be selected.
   for (let first = 0; first < optionalBaseStats.length - 1; first += 1) {
     for (let second = first + 1; second < optionalBaseStats.length; second += 1) {
       const candidateBaseStats = [
@@ -142,20 +152,48 @@ export function optimizeBaseAttributeSelection(
         optionalBaseStats[second],
       ]
 
-      const candidateMatches = findJointFarmingWeapons(
+      const candidateMatches = findJointFarmingAlluviums(
         target,
-        alluvium,
         fixedAttributeType,
         candidateBaseStats,
         weapons,
+        alluviums,
       )
 
-      if (candidateMatches.length > maxMatches) {
-        maxMatches = candidateMatches.length
+      const candidateBestSingle = candidateMatches.reduce(
+        (best, match) => Math.max(best, match.weapons.length),
+        0,
+      )
+      const candidateTotalMatches = candidateMatches.reduce(
+        (total, match) => total + match.weapons.length,
+        0,
+      )
+      const candidateAlluviumCount = candidateMatches.length
+
+      const isBetter =
+        candidateBestSingle > bestSingleAlluviumCount
+        || (
+          candidateBestSingle === bestSingleAlluviumCount
+          && candidateTotalMatches > totalAlluviumWeaponMatches
+        )
+        || (
+          candidateBestSingle === bestSingleAlluviumCount
+          && candidateTotalMatches === totalAlluviumWeaponMatches
+          && candidateAlluviumCount > bestAlluviumCount
+        )
+
+      if (isBetter) {
         recommendedBaseStats = candidateBaseStats
-        matchingWeapons = candidateMatches
+        alluviumMatches = candidateMatches
+        bestSingleAlluviumCount = candidateBestSingle
+        totalAlluviumWeaponMatches = candidateTotalMatches
+        bestAlluviumCount = candidateAlluviumCount
         optimalCombinationCount = 1
-      } else if (candidateMatches.length === maxMatches) {
+      } else if (
+        candidateBestSingle === bestSingleAlluviumCount
+        && candidateTotalMatches === totalAlluviumWeaponMatches
+        && candidateAlluviumCount === bestAlluviumCount
+      ) {
         optimalCombinationCount += 1
       }
     }
@@ -163,16 +201,14 @@ export function optimizeBaseAttributeSelection(
 
   return {
     recommendedBaseStats,
-    matchingWeapons,
-    maxMatches: Math.max(maxMatches, 0),
+    alluviumMatches,
+    bestSingleAlluviumCount: Math.max(bestSingleAlluviumCount, 0),
+    totalAlluviumWeaponMatches: Math.max(totalAlluviumWeaponMatches, 0),
     optimalCombinationCount,
   }
 }
 
-/**
- * Generate matching Alluviums for every weapon.
- * Weapons without a match remain in the output with an empty alluviums array.
- */
+/** 为原有武器列表生成其所有可刷取淤积区。 */
 export function buildWeaponAlluviumMatches(
   weapons: Weapon[],
   alluviums: Alluvium[],
