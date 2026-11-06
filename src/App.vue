@@ -37,6 +37,19 @@ const selectedWeapon = computed(() =>
   weapons.find((weapon) => weapon.name === selectedWeaponName.value) ?? weapons[0],
 )
 
+watch(selectedWeaponType, (type) => {
+  if (type === '全部') return
+
+  const currentWeaponIsInType = weapons.some(
+    (weapon) => weapon.name === selectedWeaponName.value && weapon.type === type,
+  )
+
+  if (!currentWeaponIsInType) {
+    const firstWeaponInType = weapons.find((weapon) => weapon.type === type)
+    if (firstWeaponInType) selectedWeaponName.value = firstWeaponInType.name
+  }
+})
+
 const weaponAlluviumMatches = computed(() =>
   buildWeaponAlluviumMatches(weapons, alluviums),
 )
@@ -143,13 +156,6 @@ watch(selectedWeapon, (weapon) => {
   manualBaseStats.value = next
 })
 
-// If the current category/search hides the selected weapon, keep the selection
-// itself; users can still see its selected state when they clear the filter.
-const selectedWeaponAlluviums = computed(() =>
-  weaponAlluviumMatches.value.find(
-    (result) => result.weapon.name === selectedWeapon.value.name,
-  )?.alluviums ?? [],
-)
 </script>
 
 <template>
