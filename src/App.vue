@@ -162,7 +162,7 @@ watch(selectedWeapon, (weapon) => {
         <span class="brand-mark">E</span>
         <span class="brand-copy">
           <strong>终末地 · 基质规划</strong>
-          <small>武器属性 · 刻写券 · 淤积区</small>
+          <small>武器属性 · 刻写券 · 能量淤积点</small>
         </span>
       </a>
       <div class="topbar-meta">
@@ -412,7 +412,7 @@ watch(selectedWeapon, (weapon) => {
 
             <div v-else class="output-empty">
               <span class="empty-symbol">⌕</span>
-              <strong>没有找到符合条件的淤积区</strong>
+              <strong>没有找到符合条件的能量淤积点</strong>
               <p>可以尝试切换固定属性，或手动调整基础属性组合。</p>
             </div>
           </div>
