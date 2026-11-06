@@ -374,7 +374,7 @@ watch(selectedWeapon, (weapon) => {
 
             <div v-else-if="alluviumResults.length" class="alluvium-result-list">
               <article
-                v-for="(result, index) in alluviumResults"
+                v-for="result in alluviumResults"
                 :key="result.alluvium.name"
                 class="alluvium-result-card"
               >
