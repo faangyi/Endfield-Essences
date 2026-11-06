@@ -19,11 +19,6 @@ export interface Alluvium {
   skillStats: string[]
 }
 
-export interface WeaponAlluviumMatch {
-  weapon: Weapon
-  alluviums: Alluvium[]
-}
-
 /** 刻写券固定的非基础属性类型。 */
 export type FixedAttributeType = 'secondaryStats' | 'skillStats'
 
