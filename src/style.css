@@ -162,7 +162,7 @@ button:focus-visible, input:focus-visible, a:focus-visible {
   white-space: nowrap;
   transition: .18s ease;
 }
-.weapon-type-tabs button:hover { background: #e9ede4; color: var(--ink); }
+.weapon-type-tabs button:hover { background: #efede7; color: var(--ink); }
 .weapon-type-tabs button.active {
   border-color: #d5ca6a;
   background: #f7f2cc;
@@ -280,7 +280,7 @@ button:focus-visible, input:focus-visible, a:focus-visible {
 .weapon-empty span { font-size: 10px; }
 
 .planner-panel { display: grid; grid-template-rows: 48px auto minmax(0, 1fr); }
-.panel-heading { display: flex; align-items: center; justify-content: center; min-width: 0; border-bottom: 1px solid #e8ebe3; background: rgba(250,251,247,.8); }
+.panel-heading { display: flex; align-items: center; justify-content: center; min-width: 0; border-bottom: 1px solid #e9e6df; background: rgba(250,251,247,.8); }
 .planner-panel-heading h2 { margin: 0; color: var(--ink); font-size: 16px; font-weight: 700; letter-spacing: .06em; }
 
 .planner-controls {
@@ -290,7 +290,7 @@ button:focus-visible, input:focus-visible, a:focus-visible {
   gap: 12px;
   padding: 14px;
   border-bottom: 1px solid #e5e9df;
-  background: linear-gradient(180deg, #f7f8f3, #f2f4ed);
+  background: linear-gradient(180deg, #f8f6f0, #f2f4ed);
 }
 .target-weapon-section {
   display: flex;
@@ -310,9 +310,9 @@ button:focus-visible, input:focus-visible, a:focus-visible {
   flex: 0 0 72px;
   place-items: center;
   overflow: hidden;
-  border: 1px solid #dfe5d9;
+  border: 1px solid #e3e0d8;
   border-radius: 12px;
-  background: linear-gradient(145deg, #e6eadf, #f7f7f0);
+  background: linear-gradient(145deg, #eeece5, #f7f7f0);
 }
 .target-weapon-art .art-cross { width: 46px; height: 46px; }
 .target-weapon-art .art-orbit { width: 61px; height: 61px; }
@@ -322,7 +322,7 @@ button:focus-visible, input:focus-visible, a:focus-visible {
 .target-weapon-info h3 { margin: 0; overflow: hidden; color: var(--ink); font-size: 14px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
 .target-weapon-type { color: #929a8e; font-size: 8px; }
 .target-weapon-stats { display: flex; flex-direction: column; gap: 3px; margin-top: 3px; }
-.target-weapon-stats span { color: #6d7767; font-size: 8px; line-height: 1.35; white-space: nowrap; }
+.target-weapon-stats span { color: #716b60; font-size: 8px; line-height: 1.35; white-space: nowrap; }
 
 .control-section { min-width: 0; padding: 4px 2px; }
 .base-section { display: flex; flex-direction: column; justify-content: center; padding: 7px 13px; border: 1px solid #e1e6dc; border-radius: 15px; background: rgba(255,255,255,.65); }
@@ -330,16 +330,16 @@ button:focus-visible, input:focus-visible, a:focus-visible {
 .control-title h3 { margin: 0; color: var(--ink); font-size: 12px; font-weight: 700; }
 .control-title p { margin: 5px 0 0; color: #949b8f; font-size: 8px; line-height: 1.5; }
 .base-control-title { align-items: center; flex-wrap: wrap; }
-.base-mode-switch { display: flex; flex: 0 0 auto; gap: 3px; padding: 3px; border: 1px solid #e1e5dc; border-radius: 9px; background: #f0f2eb; }
+.base-mode-switch { display: flex; flex: 0 0 auto; gap: 3px; padding: 3px; border: 1px solid #e4e1d9; border-radius: 9px; background: #f1efe9; }
 .base-mode-switch button { min-height: 25px; padding: 0 9px; border: 1px solid transparent; border-radius: 7px; background: transparent; color: #81897b; font-size: 8px; white-space: nowrap; }
 .base-mode-switch button.active { border-color: #e2d991; background: #f8f3d4; color: #555337; box-shadow: 0 1px 2px rgba(70,75,54,.06); }
 .base-stat-options { display: flex; flex-wrap: wrap; gap: 6px; }
-.base-stat-option { display: inline-flex; align-items: center; gap: 5px; min-height: 29px; padding: 0 8px; border: 1px solid #e1e5dc; border-radius: 8px; background: #fff; color: #778071; font-size: 8px; transition: .15s ease; }
-.base-stat-option:hover:not(:disabled) { border-color: #c6cebd; }
+.base-stat-option { display: inline-flex; align-items: center; gap: 5px; min-height: 29px; padding: 0 8px; border: 1px solid #e4e1d9; border-radius: 8px; background: #fff; color: #778071; font-size: 8px; transition: .15s ease; }
+.base-stat-option:hover:not(:disabled) { border-color: #cbc5b6; }
 .base-stat-option.active { border-color: #d6ca70; background: #faf5d7; color: #555337; }
 .base-stat-option:disabled { cursor: default; opacity: 1; }
 .base-stat-option.locked { border-color: #d6ca70; background: #f8f2cf; color: #555337; }
-.base-check { display: grid; width: 12px; height: 12px; flex: 0 0 12px; place-items: center; border: 1px solid #cbd2c4; border-radius: 4px; background: #fff; color: #59604e; font-size: 8px; line-height: 1; }
+.base-check { display: grid; width: 12px; height: 12px; flex: 0 0 12px; place-items: center; border: 1px solid #d0cbbf; border-radius: 4px; background: #fff; color: #59604e; font-size: 8px; line-height: 1; }
 .base-stat-option.active .base-check { border-color: #c2b34d; background: #e6d85c; color: #4b4b32; }
 .base-stat-option small { color: #9b9149; font-size: 7px; }
 .optimization-summary { display: flex; align-items: center; justify-content: space-between; gap: 7px; margin-top: 12px; color: #92998d; font-size: 8px; line-height: 1.45; }
@@ -351,8 +351,8 @@ button:focus-visible, input:focus-visible, a:focus-visible {
 .fixed-section .control-title { margin-bottom: 10px; }
 .fixed-section .control-title p { max-width: 180px; }
 .fixed-stat-options { display: grid; grid-template-columns: 1fr; gap: 7px; }
-.fixed-stat-option { display: flex; min-width: 0; min-height: 52px; flex-direction: column; justify-content: center; gap: 5px; padding: 7px 9px; border: 1px solid #e1e5dc; border-radius: 10px; background: #fff; text-align: left; transition: .16s ease; }
-.fixed-stat-option:hover { border-color: #c6cebd; }
+.fixed-stat-option { display: flex; min-width: 0; min-height: 52px; flex-direction: column; justify-content: center; gap: 5px; padding: 7px 9px; border: 1px solid #e4e1d9; border-radius: 10px; background: #fff; text-align: left; transition: .16s ease; }
+.fixed-stat-option:hover { border-color: #cbc5b6; }
 .fixed-stat-option.active { border-color: #d5c96e; background: #fbf7df; box-shadow: inset 0 -2px 0 rgba(197,180,64,.28); }
 .fixed-option-label { display: flex; align-items: center; gap: 5px; color: #92998d; font-size: 8px; }
 .radio-indicator { width: 9px; height: 9px; border: 1px solid #b9c2b4; border-radius: 50%; }
@@ -402,7 +402,7 @@ button:focus-visible, input:focus-visible, a:focus-visible {
 .empty-symbol { display: grid; width: 38px; height: 38px; place-items: center; border: 1px solid #dce2d7; border-radius: 13px; color: #899381; font-size: 19px; }
 .output-empty strong { color: #56604f; font-size: 12px; font-weight: 650; }
 .output-empty p { margin: 0; font-size: 9px; }
-.output-footnote { display: flex; flex: 0 0 auto; justify-content: space-between; gap: 10px; min-height: 25px; padding: 5px 13px; border-top: 1px solid #e8ebe3; background: #f7f8f3; color: #98a092; font-size: 8px; }
+.output-footnote { display: flex; flex: 0 0 auto; justify-content: space-between; gap: 10px; min-height: 25px; padding: 5px 13px; border-top: 1px solid #e9e6df; background: #f8f6f0; color: #98a092; font-size: 8px; }
 
 .page-footer { position: relative; z-index: 1; display: flex; flex: 0 0 18px; align-items: center; justify-content: space-between; gap: 12px; width: min(100%, 1420px); margin: 8px auto 0; color: #8d9687; font-size: 8px; }
 .page-footer span:first-child { color: #697362; font-weight: 600; }
@@ -416,8 +416,8 @@ button:focus-visible, input:focus-visible, a:focus-visible {
   .app-shell { padding-right: 12px; padding-left: 12px; }
   .workspace { width: 100%; grid-template-columns: minmax(310px, .96fr) minmax(0, 2.04fr); gap: 9px; }
   .weapon-panel { padding: 9px; }
-  .weapon-picker-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
-  .weapon-picker-card { min-height: 82px; padding: 6px; gap: 6px; }
+  .weapon-picker-list { grid-template-columns: 1fr; gap: 6px; }
+  .weapon-picker-card { min-height: 72px; padding: 6px; gap: 8px; }
   .weapon-art-placeholder { width: 54px; height: 54px; flex-basis: 54px; }
   .weapon-picker-name { font-size: 12px; }
   .weapon-stat-chips span { font-size: 8px; }
@@ -461,7 +461,7 @@ button:focus-visible, input:focus-visible, a:focus-visible {
   .search-symbol { left: 9px; font-size: 17px; }
   .weapon-total { right: 8px; font-size: 7px; }
   .weapon-list-scroll { padding-bottom: 2px; }
-  .weapon-picker-list { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; }
+  .weapon-picker-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; }
   .weapon-picker-card { min-height: 62px; flex-direction: row; gap: 5px; padding: 4px; border-radius: 9px; }
   .weapon-art-placeholder { width: 43px; height: 43px; flex: 0 0 43px; border-radius: 6px; }
   .art-cross { width: 19px; height: 19px; }
