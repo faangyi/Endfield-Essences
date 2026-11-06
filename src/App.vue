@@ -403,6 +403,7 @@ watch(selectedWeapon, (weapon) => {
                       <span>{{ weapon.attributeStats }} · {{ weapon.secondaryStats }} · {{ weapon.skillStats }}</span>
                     </span>
                   </div>
+                  </div>
                 </div>
               </article>
             </div>
