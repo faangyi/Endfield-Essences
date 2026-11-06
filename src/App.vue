@@ -3,7 +3,6 @@ import { computed, ref, watch } from 'vue'
 import { alluviums } from './data/alluvium'
 import { weapons } from './data/weapons'
 import {
-  buildWeaponAlluviumMatches,
   findJointFarmingAlluviums,
   optimizeBaseAttributeSelection,
 } from './logic/recommendation'
@@ -38,6 +37,7 @@ const selectedWeapon = computed(() =>
 )
 
 watch(selectedWeaponType, (type) => {
+  weaponKeyword.value = ''
   if (type === '全部') return
 
   const currentWeaponIsInType = weapons.some(
@@ -50,9 +50,6 @@ watch(selectedWeaponType, (type) => {
   }
 })
 
-const weaponAlluviumMatches = computed(() =>
-  buildWeaponAlluviumMatches(weapons, alluviums),
-)
 
 const fixedAttributeType = ref<FixedAttributeType>('secondaryStats')
 const baseSelectionMode = ref<'auto' | 'manual'>('auto')
@@ -165,7 +162,7 @@ watch(selectedWeapon, (weapon) => {
         <span class="brand-mark">E</span>
         <span class="brand-copy">
           <strong>终末地 · 基质规划</strong>
-          <small>ENDFIELD ESSENCE PLANNER</small>
+          <small>武器属性 · 刻写券 · 淤积区</small>
         </span>
       </a>
       <div class="topbar-meta">
