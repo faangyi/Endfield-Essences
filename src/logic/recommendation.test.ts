@@ -47,7 +47,7 @@ const weapons: Weapon[] = [
     name: '不同固定附加属性',
     type: '单手剑',
     attributeStats: '力量提升',
-    secondaryStats: '攻击提升',
+    secondaryStats: '生命提升',
     skillStats: '夜幕',
   },
   {
