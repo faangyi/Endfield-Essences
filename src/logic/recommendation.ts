@@ -207,13 +207,3 @@ export function optimizeBaseAttributeSelection(
   }
 }
 
-/** 为原有武器列表生成其所有可刷取淤积区。 */
-export function buildWeaponAlluviumMatches(
-  weapons: Weapon[],
-  alluviums: Alluvium[],
-): WeaponAlluviumMatch[] {
-  return weapons.map((weapon) => ({
-    weapon,
-    alluviums: findMatchingAlluviums(weapon, alluviums),
-  }))
-}
