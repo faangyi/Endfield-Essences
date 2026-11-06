@@ -1,20 +1,20 @@
 :root {
   font-family: "MiSans", "HarmonyOS Sans SC", "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", system-ui, sans-serif;
   color: #30352f;
-  background: #e9ebe5;
+  background: #e9e8e2;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  --paper: #e9ebe5;
-  --paper-bright: #f7f8f3;
-  --panel: rgba(250, 251, 247, 0.96);
-  --panel-muted: #f0f2eb;
-  --ink: #30352f;
-  --ink-soft: #596157;
-  --muted: #858c80;
-  --muted-light: #a4aa9e;
-  --line: #dce0d6;
-  --line-dark: #c8cec1;
+  --paper: #e9e8e2;
+  --paper-bright: #faf9f5;
+  --panel: rgba(251, 250, 247, 0.97);
+  --panel-muted: #f2f0e9;
+  --ink: #30312f;
+  --ink-soft: #5c5b55;
+  --muted: #85837b;
+  --muted-light: #a5a197;
+  --line: #e0ded5;
+  --line-dark: #cbc8bd;
   --signal: #e6d84c;
   --signal-deep: #b8a82b;
   --signal-soft: #f8f2bd;
@@ -40,9 +40,9 @@ html, body, #app {
 
 body {
   background:
-    radial-gradient(ellipse at 12% 12%, rgba(202, 211, 191, .46), transparent 32%),
-    radial-gradient(ellipse at 90% 85%, rgba(208, 214, 194, .38), transparent 34%),
-    linear-gradient(135deg, #eef0e9, #e5e8e0);
+    radial-gradient(ellipse at 12% 12%, rgba(222, 215, 190, .34), transparent 32%),
+    radial-gradient(ellipse at 90% 85%, rgba(218, 213, 197, .30), transparent 34%),
+    linear-gradient(135deg, #f0eee8, #e7e5de);
 }
 
 button, input { font: inherit; }
@@ -118,7 +118,7 @@ button:focus-visible, input:focus-visible, a:focus-visible {
   z-index: 1;
   display: grid;
   flex: 0 1 auto;
-  grid-template-columns: minmax(330px, .82fr) minmax(0, 2.18fr);
+  grid-template-columns: minmax(370px, .96fr) minmax(0, 2.04fr);
   gap: 15px;
   width: min(100%, 1420px);
   height: min(650px, calc(100dvh - 115px));
@@ -137,13 +137,13 @@ button:focus-visible, input:focus-visible, a:focus-visible {
   backdrop-filter: blur(12px);
 }
 
-.weapon-panel { display: flex; flex-direction: column; padding: 13px; }
+ .weapon-panel { display: flex; flex-direction: column; padding: 16px 13px 13px; }
 
 .weapon-type-tabs {
   display: flex;
   flex: 0 0 auto;
   gap: 5px;
-  padding: 2px 1px 11px;
+  padding: 5px 2px 12px;
   overflow-x: auto;
   scrollbar-width: none;
 }
@@ -210,37 +210,37 @@ button:focus-visible, input:focus-visible, a:focus-visible {
   position: relative;
   display: flex;
   min-width: 0;
-  min-height: 112px;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 7px;
-  padding: 8px;
-  border: 1px solid #e1e5dc;
+  min-height: 91px;
+  align-items: center;
+  gap: 10px;
+  padding: 9px;
+  border: 1px solid #e1dfd7;
   border-radius: 14px;
-  background: rgba(255,255,255,.9);
+  background: rgba(255,255,255,.94);
   text-align: left;
-  box-shadow: 0 2px 7px rgba(60,68,54,.025);
+  box-shadow: 0 2px 7px rgba(60,60,54,.025);
   transition: transform .17s ease, border-color .17s ease, background .17s ease, box-shadow .17s ease;
 }
-.weapon-picker-card:hover { transform: translateY(-2px); border-color: #c6cdbd; box-shadow: 0 5px 14px rgba(60,68,54,.07); }
+.weapon-picker-card:hover { transform: translateY(-2px); border-color: #c9c3ad; box-shadow: 0 5px 14px rgba(60,60,54,.07); }
 .weapon-picker-card.selected {
   border-color: #c9bb48;
-  background: linear-gradient(145deg, #fffef5, #fbf7d9);
+  background: linear-gradient(145deg, #fffef8, #fbf7df);
   box-shadow: inset 0 0 0 1px rgba(204,190,71,.22), 0 4px 13px rgba(163,148,50,.1);
 }
 .weapon-art-placeholder {
   position: relative;
   display: grid;
-  width: 100%;
-  height: 47px;
+  width: 64px;
+  height: 64px;
+  flex: 0 0 64px;
   place-items: center;
   overflow: hidden;
-  border: 1px solid #e1e5db;
-  border-radius: 9px;
+  border: 1px solid #e2dfd5;
+  border-radius: 10px;
   background:
     radial-gradient(circle at 50% 45%, rgba(255,255,255,.95), transparent 50%),
-    linear-gradient(135deg, #e9ede4, #f4f4eb);
-  color: #737c6e;
+    linear-gradient(135deg, #efeee8, #f8f6ef);
+  color: #73736b;
 }
 .weapon-art-placeholder::before, .weapon-art-placeholder::after {
   position: absolute;
@@ -254,11 +254,11 @@ button:focus-visible, input:focus-visible, a:focus-visible {
 .art-cross { position: absolute; z-index: 1; width: 29px; height: 29px; border: 1px solid rgba(113,126,104,.27); border-radius: 8px; transform: rotate(45deg); }
 .art-orbit { position: absolute; z-index: 1; width: 38px; height: 38px; border: 1px dashed rgba(113,126,104,.24); border-radius: 50%; }
 .art-initial { position: relative; z-index: 2; color: #56614f; font-size: 20px; font-weight: 650; }
-.weapon-picker-info { display: flex; min-width: 0; flex-direction: column; align-items: flex-start; gap: 4px; }
-.weapon-picker-name { max-width: 100%; overflow: hidden; color: var(--ink); font-size: 12px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
-.weapon-picker-type { color: #92998c; font-size: 8px; }
-.weapon-stat-chips { display: flex; max-width: 100%; flex-wrap: wrap; gap: 3px; }
-.weapon-stat-chips span { padding: 3px 5px; border: 1px solid #e5e8df; border-radius: 5px; background: #f5f6f1; color: #687162; font-size: 7px; line-height: 1.2; white-space: nowrap; }
+.weapon-picker-info { display: flex; min-width: 0; flex: 1 1 auto; flex-direction: column; align-items: flex-start; gap: 5px; }
+.weapon-picker-name { max-width: 100%; overflow: hidden; color: var(--ink); font-size: 14px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+.weapon-picker-type { color: #929087; font-size: 10px; }
+.weapon-stat-chips { display: flex; max-width: 100%; flex-wrap: wrap; gap: 4px; }
+.weapon-stat-chips span { padding: 4px 6px; border: 1px solid #e5e2d9; border-radius: 6px; background: #f7f6f1; color: #625f56; font-size: 9px; line-height: 1.25; white-space: nowrap; }
 .weapon-picker-card.selected .weapon-stat-chips span { border-color: #e9e1a7; background: rgba(255,255,255,.75); }
 .weapon-selected-mark {
   position: absolute;
@@ -372,34 +372,31 @@ button:focus-visible, input:focus-visible, a:focus-visible {
 .alluvium-result-card {
   display: grid;
   min-width: 0;
-  grid-template-columns: 142px minmax(0, 1fr);
+  grid-template-columns: 116px minmax(0, 1fr);
   align-items: stretch;
-  gap: 9px;
-  padding: 8px;
-  border: 1px solid #e0e5db;
+  gap: 13px;
+  padding: 11px;
+  border: 1px solid #e0ded6;
   border-radius: 15px;
-  background: rgba(255,255,255,.9);
-  box-shadow: 0 2px 8px rgba(57,67,51,.025);
+  background: rgba(255,255,255,.94);
+  box-shadow: 0 2px 8px rgba(57,57,51,.025);
 }
-.alluvium-location { display: flex; min-width: 0; align-items: center; gap: 9px; padding: 7px; border: 1px solid #e9ece4; border-radius: 11px; background: linear-gradient(145deg, #f1f4ec, #f8f8f2); }
-.alluvium-location-art { position: relative; display: grid; width: 48px; height: 58px; flex: 0 0 48px; place-items: center; overflow: hidden; border: 1px solid #dfe5d9; border-radius: 9px; background: linear-gradient(145deg, #e4eadd, #f5f6ee); }
-.location-orbit { position: absolute; width: 36px; height: 36px; border: 1px dashed #b6c0ae; border-radius: 50%; }
-.location-symbol { position: relative; z-index: 1; color: #7b8971; font-size: 26px; }
-.alluvium-location-info { display: flex; min-width: 0; flex-direction: column; gap: 5px; }
-.alluvium-rank { color: #9ba391; font-family: var(--mono); font-size: 7px; letter-spacing: .05em; }
-.alluvium-location-info h4 { margin: 0; color: var(--ink); font-size: 13px; font-weight: 700; line-height: 1.35; overflow-wrap: anywhere; }
-.alluvium-match-count { color: #8b9584; font-size: 8px; line-height: 1.4; }
-
-.alluvium-card-weapons { display: grid; grid-template-columns: repeat(auto-fill, minmax(145px, 1fr)); align-content: center; gap: 6px; min-width: 0; }
-.mini-weapon-card { display: grid; min-width: 0; grid-template-columns: 35px minmax(0, 1fr); align-items: center; gap: 7px; min-height: 54px; padding: 5px 7px; border: 1px solid #e7ebe3; border-radius: 10px; background: #fbfcf8; }
+.alluvium-location { display: flex; min-width: 0; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 4px; }
+.alluvium-location h4 { order: 0; margin: 0; color: var(--ink); font-size: 13px; font-weight: 700; line-height: 1.35; text-align: center; overflow-wrap: anywhere; }
+.alluvium-location-art { position: relative; order: 1; display: grid; width: 76px; height: 76px; flex: 0 0 76px; place-items: center; overflow: hidden; border: 1px solid #e2dfd5; border-radius: 12px; background: linear-gradient(145deg, #eeece4, #f8f6ef); }
+.location-orbit { position: absolute; width: 52px; height: 52px; border: 1px dashed #c5bfae; border-radius: 50%; }
+.location-symbol { position: relative; z-index: 1; color: #8b8068; font-size: 34px; }
+.alluvium-weapons-area { display: flex; min-width: 0; flex-direction: column; justify-content: center; gap: 9px; }
+.alluvium-match-count { color: #77746a; font-size: 11px; line-height: 1.4; text-align: center; font-weight: 600; }
+.alluvium-card-weapons { display: grid; grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); align-content: center; gap: 7px; min-width: 0; }
+.mini-weapon-card { display: grid; min-width: 0; grid-template-columns: 42px minmax(0, 1fr); align-items: center; gap: 8px; min-height: 58px; padding: 6px 8px; border: 1px solid #e7e4dc; border-radius: 10px; background: #fdfcf9; }
 .mini-weapon-card.is-target { border-color: #d8ca6a; background: #fbf7df; }
-.mini-weapon-art { position: relative; display: grid; width: 35px; height: 40px; place-items: center; overflow: hidden; border: 1px solid #e0e5db; border-radius: 7px; background: linear-gradient(145deg, #e9ede4, #f6f7f0); }
-.mini-weapon-art::after { position: absolute; width: 23px; height: 23px; border: 1px dashed #bac4b2; border-radius: 6px; content: ""; transform: rotate(45deg); }
-.mini-weapon-art span { position: relative; z-index: 1; color: #66715e; font-size: 13px; font-weight: 700; }
-.mini-weapon-info { display: flex; min-width: 0; flex-direction: column; gap: 4px; }
-.mini-weapon-info strong { overflow: hidden; color: #41493d; font-size: 10px; font-weight: 650; text-overflow: ellipsis; white-space: nowrap; }
-.mini-weapon-info > span { overflow: hidden; color: #98a091; font-size: 7px; text-overflow: ellipsis; white-space: nowrap; }
-.mini-target-label { grid-column: 2; justify-self: start; padding: 2px 5px; border: 1px solid #e1d78e; border-radius: 5px; background: #f8f1c8; color: #777044; font-size: 7px; }
+.mini-weapon-art { position: relative; display: grid; width: 42px; height: 42px; place-items: center; overflow: hidden; border: 1px solid #e2dfd7; border-radius: 8px; background: linear-gradient(145deg, #efeee8, #f8f6f0); }
+.mini-weapon-art::after { position: absolute; width: 27px; height: 27px; border: 1px dashed #c7c0ae; border-radius: 6px; content: ""; transform: rotate(45deg); }
+.mini-weapon-art span { position: relative; z-index: 1; color: #6d685d; font-size: 15px; font-weight: 700; }
+.mini-weapon-info { display: flex; min-width: 0; flex-direction: column; gap: 5px; }
+.mini-weapon-info strong { overflow: hidden; color: #41403a; font-size: 12px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+.mini-weapon-info > span { overflow: hidden; color: #77746b; font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
 
 .output-empty { display: grid; min-height: 100%; justify-items: center; align-content: center; gap: 8px; color: #929a8e; text-align: center; }
 .empty-symbol { display: grid; width: 38px; height: 38px; place-items: center; border: 1px solid #dce2d7; border-radius: 13px; color: #899381; font-size: 19px; }
@@ -411,16 +408,19 @@ button:focus-visible, input:focus-visible, a:focus-visible {
 .page-footer span:first-child { color: #697362; font-weight: 600; }
 
 @media (min-width: 1500px) {
-  .workspace { grid-template-columns: minmax(350px, .82fr) minmax(0, 2.18fr); }
-  .weapon-picker-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .workspace { grid-template-columns: minmax(390px, .96fr) minmax(0, 2.04fr); }
+  .weapon-picker-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (max-width: 1100px) and (min-width: 761px) {
   .app-shell { padding-right: 12px; padding-left: 12px; }
-  .workspace { width: 100%; grid-template-columns: minmax(280px, .85fr) minmax(0, 2fr); gap: 9px; }
+  .workspace { width: 100%; grid-template-columns: minmax(310px, .96fr) minmax(0, 2.04fr); gap: 9px; }
   .weapon-panel { padding: 9px; }
   .weapon-picker-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
-  .weapon-picker-card { min-height: 103px; padding: 6px; }
+  .weapon-picker-card { min-height: 82px; padding: 6px; gap: 6px; }
+  .weapon-art-placeholder { width: 54px; height: 54px; flex-basis: 54px; }
+  .weapon-picker-name { font-size: 12px; }
+  .weapon-stat-chips span { font-size: 8px; }
   .planner-controls { grid-template-columns: minmax(125px, .7fr) minmax(0, 1.4fr) minmax(160px, .9fr); gap: 7px; padding: 9px; }
   .target-weapon-section { flex-direction: column; align-items: stretch; gap: 6px; }
   .target-weapon-art { width: 100%; height: 53px; flex-basis: 53px; }
@@ -428,7 +428,8 @@ button:focus-visible, input:focus-visible, a:focus-visible {
   .base-section, .fixed-section { padding: 7px; }
   .control-title { flex-direction: column; }
   .base-mode-switch { align-self: flex-start; }
-  .alluvium-result-card { grid-template-columns: 112px minmax(0, 1fr); }
+  .alluvium-result-card { grid-template-columns: 96px minmax(0, 1fr); }
+  .alluvium-location-art { width: 64px; height: 64px; flex-basis: 64px; }
   .alluvium-card-weapons { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
 }
 
@@ -452,7 +453,7 @@ button:focus-visible, input:focus-visible, a:focus-visible {
     margin: 0 auto;
   }
   .panel { border-radius: 15px; }
-  .weapon-panel { padding: 7px; }
+  .weapon-panel { padding: 9px 7px 7px; }
   .weapon-type-tabs { gap: 3px; padding-bottom: 6px; }
   .weapon-type-tabs button { min-height: 27px; padding: 0 9px; border-radius: 8px; font-size: 8px; }
   .weapon-search { flex-basis: 29px; height: 29px; margin-bottom: 6px; border-radius: 8px; }
@@ -461,16 +462,16 @@ button:focus-visible, input:focus-visible, a:focus-visible {
   .weapon-total { right: 8px; font-size: 7px; }
   .weapon-list-scroll { padding-bottom: 2px; }
   .weapon-picker-list { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; }
-  .weapon-picker-card { min-height: 77px; gap: 3px; padding: 4px; border-radius: 9px; }
-  .weapon-art-placeholder { height: 27px; border-radius: 6px; }
+  .weapon-picker-card { min-height: 62px; flex-direction: row; gap: 5px; padding: 4px; border-radius: 9px; }
+  .weapon-art-placeholder { width: 43px; height: 43px; flex: 0 0 43px; border-radius: 6px; }
   .art-cross { width: 19px; height: 19px; }
   .art-orbit { width: 24px; height: 24px; }
   .art-initial { font-size: 14px; }
   .weapon-picker-info { gap: 2px; }
-  .weapon-picker-name { font-size: 8px; }
+  .weapon-picker-name { font-size: 9px; }
   .weapon-picker-type { display: none; }
   .weapon-stat-chips { gap: 2px; }
-  .weapon-stat-chips span { padding: 2px 3px; border-radius: 3px; font-size: 5px; }
+  .weapon-stat-chips span { padding: 2px 3px; border-radius: 3px; font-size: 6px; }
   .weapon-selected-mark { top: 4px; right: 4px; width: 13px; height: 13px; font-size: 7px; }
   .planner-panel { grid-template-rows: 35px auto minmax(0, 1fr); }
   .planner-panel-heading h2 { font-size: 12px; }
@@ -515,32 +516,31 @@ button:focus-visible, input:focus-visible, a:focus-visible {
   .output-count i { height: 9px; margin: 0 1px; }
   .alluvium-results-scroll { padding: 5px; }
   .alluvium-result-list { gap: 5px; }
-  .alluvium-result-card { grid-template-columns: 80px minmax(0, 1fr); gap: 4px; padding: 4px; border-radius: 9px; }
-  .alluvium-location { flex-direction: column; justify-content: center; gap: 3px; padding: 4px; border-radius: 7px; }
-  .alluvium-location-art { width: 35px; height: 31px; flex-basis: 31px; border-radius: 6px; }
-  .location-orbit { width: 24px; height: 24px; }
-  .location-symbol { font-size: 18px; }
-  .alluvium-location-info { align-items: center; gap: 2px; }
-  .alluvium-rank { font-size: 5px; }
-  .alluvium-location-info h4 { font-size: 8px; text-align: center; }
-  .alluvium-match-count { font-size: 5px; text-align: center; }
+  .alluvium-result-card { grid-template-columns: 68px minmax(0, 1fr); gap: 4px; padding: 5px; border-radius: 9px; }
+  .alluvium-location { gap: 4px; padding: 2px; }
+  .alluvium-location-art { width: 42px; height: 42px; flex-basis: 42px; border-radius: 6px; }
+  .location-orbit { width: 30px; height: 30px; }
+  .location-symbol { font-size: 21px; }
+  .alluvium-location h4 { font-size: 8px; }
+  .alluvium-weapons-area { gap: 4px; }
+  .alluvium-match-count { font-size: 7px; }
   .alluvium-card-weapons { grid-template-columns: repeat(2, minmax(0, 1fr)); align-content: center; gap: 3px; }
-  .mini-weapon-card { grid-template-columns: 20px minmax(0, 1fr); gap: 3px; min-height: 30px; padding: 3px; border-radius: 6px; }
-  .mini-weapon-art { width: 20px; height: 23px; border-radius: 4px; }
-  .mini-weapon-art::after { width: 14px; height: 14px; }
-  .mini-weapon-art span { font-size: 8px; }
-  .mini-weapon-info { gap: 1px; }
-  .mini-weapon-info strong { font-size: 6px; }
-  .mini-weapon-info > span { font-size: 4px; }
-  .mini-target-label { display: none; }
+  .mini-weapon-card { grid-template-columns: 23px minmax(0, 1fr); gap: 3px; min-height: 31px; padding: 3px; border-radius: 6px; }
+  .mini-weapon-art { width: 23px; height: 23px; border-radius: 4px; }
+  .mini-weapon-art::after { width: 15px; height: 15px; }
+  .mini-weapon-art span { font-size: 9px; }
+  .mini-weapon-info { gap: 2px; }
+  .mini-weapon-info strong { font-size: 7px; }
+  .mini-weapon-info > span { font-size: 5px; }
   .output-footnote { min-height: 17px; padding: 3px 6px; font-size: 5px; }
   .page-footer { display: none; }
 }
 
 @media (max-width: 390px) {
   .weapon-picker-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .weapon-picker-card { min-height: 72px; }
-  .alluvium-result-card { grid-template-columns: 68px minmax(0, 1fr); }
+  .weapon-picker-card { min-height: 58px; }
+  .weapon-art-placeholder { width: 38px; height: 38px; flex-basis: 38px; }
+  .alluvium-result-card { grid-template-columns: 58px minmax(0, 1fr); }
   .alluvium-card-weapons { grid-template-columns: 1fr; }
 }
 
