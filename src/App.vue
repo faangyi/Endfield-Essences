@@ -379,18 +379,16 @@ watch(selectedWeapon, (weapon) => {
                 class="alluvium-result-card"
               >
                 <div class="alluvium-location">
+                  <h4>{{ result.alluvium.name }}</h4>
                   <span class="alluvium-location-art" aria-hidden="true">
                     <span class="location-orbit"></span>
                     <span class="location-symbol">⌖</span>
                   </span>
-                  <div class="alluvium-location-info">
-                    <span class="alluvium-rank">推荐 {{ String(index + 1).padStart(2, '0') }}</span>
-                    <h4>{{ result.alluvium.name }}</h4>
-                    <span class="alluvium-match-count">{{ result.weapons.length }} 把武器可同时刷取</span>
-                  </div>
                 </div>
 
-                <div class="alluvium-card-weapons">
+                <div class="alluvium-weapons-area">
+                  <div class="alluvium-match-count">{{ result.weapons.length }} 把武器可同时刷取</div>
+                  <div class="alluvium-card-weapons">
                   <div
                     v-for="weapon in result.weapons"
                     :key="weapon.name"
@@ -404,7 +402,6 @@ watch(selectedWeapon, (weapon) => {
                       <strong>{{ weapon.name }}</strong>
                       <span>{{ weapon.attributeStats }} · {{ weapon.secondaryStats }} · {{ weapon.skillStats }}</span>
                     </span>
-                    <span v-if="weapon.name === selectedWeapon.name" class="mini-target-label">目标</span>
                   </div>
                 </div>
               </article>
