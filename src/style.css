@@ -1,7 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@400;450;500;550;600;650;700&display=swap');
-
 :root {
-  font-family: 'Noto Sans SC', 'Microsoft YaHei', system-ui, sans-serif;
+  font-family: 'Microsoft YaHei', 'PingFang SC', 'Noto Sans CJK SC', system-ui, sans-serif;
   color: #252720;
   background: #ecece7;
   font-synthesis: none;
@@ -23,7 +21,7 @@
   --green: #347b56;
   --green-soft: #e2eee5;
   --danger: #bf493c;
-  --mono: 'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
+  --mono: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
 }
 
 * {
