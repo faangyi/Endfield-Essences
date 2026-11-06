@@ -175,12 +175,18 @@ watch(selectedWeapon, (weapon) => {
 
     <main class="workspace">
       <section class="panel weapon-panel" aria-label="武器选择">
-        <div class="panel-heading weapon-panel-heading">
-          <div>
-            <p class="section-kicker">01 / 武器库</p>
-            <h1>选择目标武器</h1>
-          </div>
-          <span class="weapon-total">{{ filteredWeapons.length }} <small>/ {{ weapons.length }}</small></span>
+        <div class="weapon-type-tabs" role="tablist" aria-label="武器种类">
+          <button
+            v-for="type in weaponTypes"
+            :key="type"
+            type="button"
+            role="tab"
+            :aria-selected="selectedWeaponType === type"
+            :class="{ active: selectedWeaponType === type }"
+            @click="selectedWeaponType = type"
+          >
+            {{ type }}
+          </button>
         </div>
 
         <label class="weapon-search">
@@ -191,25 +197,13 @@ watch(selectedWeapon, (weapon) => {
             placeholder="搜索武器名称"
             aria-label="搜索武器名称"
           />
-          <kbd>⌕</kbd>
+          <span class="weapon-total">{{ filteredWeapons.length }} / {{ weapons.length }}</span>
         </label>
-
-        <div class="weapon-type-tabs" role="group" aria-label="武器种类">
-          <button
-            v-for="type in weaponTypes"
-            :key="type"
-            type="button"
-            :class="{ active: selectedWeaponType === type }"
-            @click="selectedWeaponType = type"
-          >
-            {{ type }}
-          </button>
-        </div>
 
         <div class="weapon-list-scroll">
           <div v-if="filteredWeapons.length" class="weapon-picker-list">
             <button
-              v-for="(weapon, index) in filteredWeapons"
+              v-for="weapon in filteredWeapons"
               :key="weapon.name"
               type="button"
               class="weapon-picker-card"
@@ -221,7 +215,6 @@ watch(selectedWeapon, (weapon) => {
                 <span class="art-cross"></span>
                 <span class="art-orbit"></span>
                 <span class="art-initial">{{ weapon.name.slice(0, 1) }}</span>
-                <small>图像待添加</small>
               </span>
               <span class="weapon-picker-info">
                 <strong class="weapon-picker-name">{{ weapon.name }}</strong>
@@ -240,63 +233,29 @@ watch(selectedWeapon, (weapon) => {
             <span>请尝试其他名称或切换武器种类。</span>
           </div>
         </div>
-
-        <div class="panel-footnote">
-          <span class="footnote-square"></span>
-          选择武器后，右侧配置与刷取地点自动更新
-        </div>
       </section>
 
       <section class="panel planner-panel" aria-label="刻写券与刷取结果">
         <div class="panel-heading planner-panel-heading">
-          <div>
-            <p class="section-kicker">02 / 刻写券配置</p>
-            <h2>联合刷取方案</h2>
-          </div>
-          <div class="target-summary">
-            <span>当前目标</span>
-            <strong>{{ selectedWeapon.name }}</strong>
-          </div>
+          <h2>刷取方案</h2>
         </div>
 
         <div class="planner-controls">
-          <section class="control-section fixed-section">
-            <div class="control-title">
-              <div>
-                <h3>固定一种属性</h3>
-                <p>刻写券固定其中一种，另一种从淤积区属性池随机出现</p>
-              </div>
-              <span class="control-index">固定属性 / 1</span>
-            </div>
-            <div class="fixed-stat-options">
-              <button
-                type="button"
-                class="fixed-stat-option"
-                :class="{ active: fixedAttributeType === 'secondaryStats' }"
-                :aria-pressed="fixedAttributeType === 'secondaryStats'"
-                @click="fixedAttributeType = 'secondaryStats'"
-              >
-                <span class="fixed-option-label">
-                  <span class="radio-indicator"></span>
-                  附加属性
-                  <span v-if="fixedAttributeType === 'secondaryStats'" class="selected-label">已选</span>
-                </span>
-                <strong>{{ selectedWeapon.secondaryStats }}</strong>
-              </button>
-              <button
-                type="button"
-                class="fixed-stat-option"
-                :class="{ active: fixedAttributeType === 'skillStats' }"
-                :aria-pressed="fixedAttributeType === 'skillStats'"
-                @click="fixedAttributeType = 'skillStats'"
-              >
-                <span class="fixed-option-label">
-                  <span class="radio-indicator"></span>
-                  技能属性
-                  <span v-if="fixedAttributeType === 'skillStats'" class="selected-label">已选</span>
-                </span>
-                <strong>{{ selectedWeapon.skillStats }}</strong>
-              </button>
+          <section class="target-weapon-section" aria-label="当前目标武器">
+            <span class="target-weapon-art" aria-hidden="true">
+              <span class="art-cross"></span>
+              <span class="art-orbit"></span>
+              <strong>{{ selectedWeapon.name.slice(0, 1) }}</strong>
+            </span>
+            <div class="target-weapon-info">
+              <span class="section-kicker">当前目标武器</span>
+              <h3>{{ selectedWeapon.name }}</h3>
+              <span class="target-weapon-type">{{ selectedWeapon.type }}</span>
+              <span class="target-weapon-stats">
+                <span>{{ selectedWeapon.attributeStats }}</span>
+                <span>{{ selectedWeapon.secondaryStats }}</span>
+                <span>{{ selectedWeapon.skillStats }}</span>
+              </span>
             </div>
           </section>
 
@@ -304,26 +263,21 @@ watch(selectedWeapon, (weapon) => {
             <div class="control-title base-control-title">
               <div>
                 <h3>选择三种基础属性</h3>
-                <p>必须包含目标武器的基础属性，其余两种可以优化或手动指定</p>
+                <p>必须包含目标武器的基础属性</p>
               </div>
               <div class="base-mode-switch" role="group" aria-label="基础属性选择方式">
                 <button
                   type="button"
                   :class="{ active: baseSelectionMode === 'auto' }"
                   @click="useAutomaticBaseStats"
-                >
-                  自动最优
-                </button>
+                >自动最优</button>
                 <button
                   type="button"
                   :class="{ active: baseSelectionMode === 'manual' }"
                   @click="useManualBaseStats"
-                >
-                  手动选择
-                </button>
+                >手动选择</button>
               </div>
             </div>
-
             <div class="base-stat-options">
               <button
                 v-for="attribute in baseAttributeOptions"
@@ -343,15 +297,12 @@ watch(selectedWeapon, (weapon) => {
                 <small v-if="attribute === selectedWeapon.attributeStats">目标必选</small>
               </button>
             </div>
-
             <div class="optimization-summary">
               <span v-if="baseSelectionMode === 'auto'">
                 <span class="signal-dot"></span>
-                已比较全部基础属性组合，优先最大化单个淤积区的可刷武器数量
+                自动比较全部组合，优先提高单点联合刷取数量
               </span>
-              <span v-else>
-                手动配置 · 已选择 {{ selectedBaseStats.length }} / 3 种基础属性
-              </span>
+              <span v-else>手动配置 · 已选择 {{ selectedBaseStats.length }} / 3 种</span>
               <strong v-if="baseSelectionMode === 'auto' && optimization">
                 最多 {{ optimization.bestSingleAlluviumCount }} 把
               </strong>
@@ -360,17 +311,54 @@ watch(selectedWeapon, (weapon) => {
               </strong>
             </div>
           </section>
+
+          <section class="control-section fixed-section">
+            <div class="control-title">
+              <div>
+                <h3>固定一种属性</h3>
+                <p>另一种属性由能量淤积点随机产出</p>
+              </div>
+            </div>
+            <div class="fixed-stat-options">
+              <button
+                type="button"
+                class="fixed-stat-option"
+                :class="{ active: fixedAttributeType === 'secondaryStats' }"
+                :aria-pressed="fixedAttributeType === 'secondaryStats'"
+                @click="fixedAttributeType = 'secondaryStats'"
+              >
+                <span class="fixed-option-label">
+                  <span class="radio-indicator"></span>
+                  附加属性
+                </span>
+                <strong>{{ selectedWeapon.secondaryStats }}</strong>
+              </button>
+              <button
+                type="button"
+                class="fixed-stat-option"
+                :class="{ active: fixedAttributeType === 'skillStats' }"
+                :aria-pressed="fixedAttributeType === 'skillStats'"
+                @click="fixedAttributeType = 'skillStats'"
+              >
+                <span class="fixed-option-label">
+                  <span class="radio-indicator"></span>
+                  技能属性
+                </span>
+                <strong>{{ selectedWeapon.skillStats }}</strong>
+              </button>
+            </div>
+          </section>
         </div>
 
         <section class="output-section">
           <div class="output-heading">
             <div>
-              <p class="section-kicker">03 / 刷取建议</p>
-              <h3>推荐淤积区</h3>
+              <p class="section-kicker">联合刷取结果</p>
+              <h3>推荐能量淤积点</h3>
             </div>
             <div class="output-count">
               <strong>{{ alluviumResults.length }}</strong>
-              <span>个适配地点</span>
+              <span>个适配淤积点</span>
               <i></i>
               <strong>{{ alluviumResults.reduce((sum, item) => sum + item.weapons.length, 0) }}</strong>
               <span>条匹配</span>
@@ -384,22 +372,23 @@ watch(selectedWeapon, (weapon) => {
               <p>目标武器的基础属性必须保留在选择中。</p>
             </div>
 
-            <div v-else-if="alluviumResults.length" class="alluvium-result-grid">
+            <div v-else-if="alluviumResults.length" class="alluvium-result-list">
               <article
                 v-for="(result, index) in alluviumResults"
                 :key="result.alluvium.name"
                 class="alluvium-result-card"
               >
-                <header class="alluvium-card-heading">
-                  <div class="alluvium-card-title">
-                    <span class="alluvium-rank">{{ String(index + 1).padStart(2, '0') }}</span>
-                    <h4>{{ result.alluvium.name }}</h4>
-                  </div>
-                  <span class="alluvium-match-count">
-                    <strong>{{ result.weapons.length }}</strong>
-                    <small>把可刷</small>
+                <div class="alluvium-location">
+                  <span class="alluvium-location-art" aria-hidden="true">
+                    <span class="location-orbit"></span>
+                    <span class="location-symbol">⌖</span>
                   </span>
-                </header>
+                  <div class="alluvium-location-info">
+                    <span class="alluvium-rank">推荐 {{ String(index + 1).padStart(2, '0') }}</span>
+                    <h4>{{ result.alluvium.name }}</h4>
+                    <span class="alluvium-match-count">{{ result.weapons.length }} 把武器可同时刷取</span>
+                  </div>
+                </div>
 
                 <div class="alluvium-card-weapons">
                   <div
@@ -429,7 +418,7 @@ watch(selectedWeapon, (weapon) => {
           </div>
 
           <div class="output-footnote">
-            <span>排序规则：可同时刷取的武器数量由多到少</span>
+            <span>按可同时刷取的武器数量排序</span>
             <span>目标武器已计入数量</span>
           </div>
         </section>
