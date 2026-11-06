@@ -17,14 +17,14 @@ const targetWeapon: Weapon = {
 
 const miningAlluvium: Alluvium = {
   name: '矿脉源区',
-  secondaryStats: ['暴击率提升', '攻击提升', '生命提升'],
+  secondaryStats: ['暴击率提升', '攻击提升'],
   skillStats: ['夜幕', '附术', '切骨'],
 }
 
 const otherAlluvium: Alluvium = {
   name: '测试区域',
   secondaryStats: ['暴击率提升', '物理伤害提升'],
-  skillStats: ['夜幕', '医疗'],
+  skillStats: ['夜幕'],
 }
 
 const weapons: Weapon[] = [
