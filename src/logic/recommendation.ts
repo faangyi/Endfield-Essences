@@ -4,7 +4,6 @@ import type {
   BaseAttributeOptimization,
   FixedAttributeType,
   Weapon,
-  WeaponAlluviumMatch,
 } from '../types'
 
 /**
